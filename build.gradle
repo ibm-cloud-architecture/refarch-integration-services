@@ -1,0 +1,71 @@
+/*
+* Build a new service component
+ */
+
+// Apply the java-library plugin to add support for Java Library
+// apply plugin: 'java-library'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+ 		classpath 'org.apache.openjpa:openjpa:2.4.2'
+        classpath 'at.schmutterer.oss.gradle:gradle-openjpa:0.2.0'
+    }
+}
+
+plugins {
+  id 'java'
+  id 'war'
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+}
+
+// Java compiler compliance level
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+dependencies {
+    providedCompile fileTree(dir: 'lib', include: ['*.jar'])
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+sourceSets {
+  main {
+    output.classesDir   = 'src/main/webapp/WEB-INF/classes'
+  }
+}
+
+apply plugin:'openjpa'
+
+// See https://github.com/schmutterer/gradle-openjpa
+openjpa {
+      files = fileTree(sourceSets.main.output.classesDir).matching {
+          include '**/model/**'
+      }
+}
+
+task processConfig(type: Copy) {
+    from('src/main/config') {
+        include '**/*'
+    }
+
+    into 'build/config/main'
+}
+
+test {
+  jvmArgs "-javaagent:./lib/openjpa-all-2.4.2.jar"
+}
+
+war {
+  dependsOn openjpaEnhance
+  rootSpec.exclude("**/lib/db2jcc4.jar")
+  rootSpec.exclude("**/lib/derby.jar")
+}

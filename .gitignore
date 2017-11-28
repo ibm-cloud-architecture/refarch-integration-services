@@ -1,0 +1,12 @@
+.apt_generated/
+.factorypath
+.gradle/
+.settings/
+.DS_Store
+build/
+custdb/
+bin/
+src/main/webapp/WEB-INF/classes/
+derby.log
+src/main/webapp/WEB-INF/classes/**/*.class
+
