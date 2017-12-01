@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity(name="Account")
@@ -30,6 +31,8 @@ public class Account {
 	protected String localBillType;
 	@Column(nullable=true, length=10)
 	protected String ratePlan;
+	@OneToOne
+	protected Customer customer;
 	
 	public Account(){}
 
@@ -119,5 +122,13 @@ public class Account {
 
 	public void setBalance(double balance) {
 		this.balance = balance;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 }

@@ -30,7 +30,7 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer newCustomer(Customer p) throws DALException {
-		logger.log(Level.WARNING,p.getLastName()+" received");
+		logger.log(Level.WARNING,p.getLastName()+" received in customer resource");
 		//p.setCreationDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		p.setCreationDate(new Date());
 		p.setStatus("New");

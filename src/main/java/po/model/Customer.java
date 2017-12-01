@@ -1,8 +1,10 @@
 package po.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -17,15 +19,16 @@ public class Customer extends Party{
 	protected String lastName;
 	@Column(nullable=false, length=150)
 	protected String emailAddress;
-	@Column(nullable=false, length=10)
+	@Column(nullable=true, length=10)
 	protected String gender;
 	
 	protected int age;
 	protected int children;
 	protected double estimatedIncome;
 	protected boolean carOwner;
-	@Column(nullable=false, length=50)
+	@Column(nullable=true, length=50)
 	protected String profession;
+	@OneToOne(cascade=CascadeType.PERSIST)
 	protected Account account;
 	
 	public Customer(){

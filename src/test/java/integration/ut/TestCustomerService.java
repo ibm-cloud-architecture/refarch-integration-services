@@ -46,6 +46,7 @@ public class TestCustomerService extends BaseTest{
 	
 	@Test
 	public void testCreateCustomer()  {
+		System.out.println("Create customer");
 		Customer c = buildCustomer();
 		try {
 			Customer cOut=serv.newCustomer(c);
@@ -56,10 +57,12 @@ public class TestCustomerService extends BaseTest{
 			e.printStackTrace();
 			fail("Persistence of customer failed");
 		}
+		System.out.println(" --> success");
 	}
 	
 	@Test
 	public void testGetCustomer(){
+		System.out.println("Get customer");
 		Customer c = null;
 		try {
 			if (customerId == 0) {
@@ -76,15 +79,16 @@ public class TestCustomerService extends BaseTest{
 			e.printStackTrace();
 			fail("Load customer failed");
 		}
+		System.out.println(" --> success");
 	}
     
 	@Test
 	public void testGetCustomers(){
+		System.out.println("Get customers");
 		Customer c = buildCustomer();
 		c.setLastName("Martin");
 		try {
 			Customer cOut=serv.newCustomer(c);
-			System.out.println("Load customer with id:"+customerId);
 			Collection<Customer> cl=serv.getCustomers();
 			Assert.assertNotNull(cl);
 			Assert.assertTrue(cl.size()>1);
@@ -92,10 +96,12 @@ public class TestCustomerService extends BaseTest{
 			e.printStackTrace();
 			fail("Load customer failed");
 		}
+		System.out.println(" --> success");
 	}
 	
 	@Test
 	public void testUpdateCustomer(){
+		System.out.println("Update customer "+customerId);
 		Customer c = null;
 		try {
 			c=serv.getCustomerById(customerId);
@@ -110,5 +116,6 @@ public class TestCustomerService extends BaseTest{
 			e.printStackTrace();
 			fail("Load customer failed");
 		}
+		System.out.println(" --> success");
 	}
 }

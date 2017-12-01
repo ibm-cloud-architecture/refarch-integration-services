@@ -13,7 +13,6 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Party {
-	public static final String ORGANIZATION = "ORGANIZATION";
 	
 	@Id
 	@GeneratedValue (strategy=GenerationType.SEQUENCE)
@@ -70,9 +69,5 @@ public abstract class Party {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-	public static String getOrganization() {
-		return ORGANIZATION;
-	}
-
 
 }
