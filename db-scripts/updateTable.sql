@@ -1,0 +1,4 @@
+alter table customers add column  ACCOUNT_ID BIGINT
+
+CREATE INDEX I_CCOUNTS_CUSTOMER 
+    ON ACCOUNTS (CUSTOMER_ID) 

@@ -3,7 +3,7 @@
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	<servlet>
 		<description>
-		JAX-RS Tools Generated - Do not modify</description>
+		Main servlet entry point for the REST resource/application</description>
 		<servlet-name>JAX-RS Servlet</servlet-name>
 		<servlet-class>com.ibm.websphere.jaxrs.server.IBMRestServlet</servlet-class>
 		<init-param>
@@ -20,7 +20,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	</servlet-mapping>
 	<persistence-context-ref>
     <persistence-context-ref-name>inv/ctx</persistence-context-ref-name>
-    <persistence-unit-name>InventoryPersistenceUnit</persistence-unit-name>
+    <persistence-unit-name>CustomerPersistenceUnit</persistence-unit-name>
   </persistence-context-ref>
 
   <persistence-unit-ref>

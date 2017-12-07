@@ -1,7 +1,9 @@
 package po.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +33,7 @@ public class Account {
 	protected String localBillType;
 	@Column(nullable=true, length=10)
 	protected String ratePlan;
-	@OneToOne
+	@OneToOne(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
 	protected Customer customer;
 	
 	public Account(){}

@@ -3,13 +3,22 @@ CREATE TABLE ACCOUNTS (
   accountNumber VARCHAR(50), 
   dropped INTEGER, 
   international DECIMAL, 
-  local DECIMAL, 
-  localBillType VARCHAR(50), 
+  local DECIMAL(8,2), 
+  balance DECIMAL(8,2),
+  localBillType VARCHAR(10), 
   longDistance DECIMAL, 
   longDistanceBillType VARCHAR(50), 
   paymentMethod VARCHAR(50), 
   ratePlan VARCHAR(10), 
-  PRIMARY KEY (id)) 
+  CUSTOMER_ID BIGINT,
+  PRIMARY KEY (id));
+  
+
+
+
+
+CREATE INDEX I_CCOUNTS_CUSTOMER 
+    ON ACCOUNTS (CUSTOMER_ID);
 
 
 CREATE TABLE CUSTOMERS 
@@ -28,6 +37,7 @@ CREATE TABLE CUSTOMERS
  gender VARCHAR(10), 
  lastName VARCHAR(50) NOT NULL, 
  profession VARCHAR(100), 
+ ACCOUNT_ID BIGINT,
  PRIMARY KEY (id)) 
         
 COMMIT;

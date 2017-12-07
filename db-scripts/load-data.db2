@@ -1,7 +1,5 @@
-INSERT INTO customers (id,creationDate, name, status, type, updateDate, age, 
-        carOwner, children, emailAddress, estimatedIncome, firstName, gender, 
+INSERT INTO customers (id,name, status, type,  age, 
+        carOwner, children, emailAddress, estimatedIncome, firstName, gender,
         lastName, profession)
 VALUES ();
 COMMIT;
-
-

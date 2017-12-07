@@ -3,6 +3,7 @@ package po.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -28,7 +29,7 @@ public class Customer extends Party{
 	protected boolean carOwner;
 	@Column(nullable=true, length=50)
 	protected String profession;
-	@OneToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
 	protected Account account;
 	
 	public Customer(){
