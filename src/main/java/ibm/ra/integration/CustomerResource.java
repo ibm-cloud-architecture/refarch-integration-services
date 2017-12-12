@@ -15,26 +15,29 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import po.model.Account;
 import po.model.Customer;
 
 @Path("/customers")
 public class CustomerResource {
 	 Logger logger = Logger.getLogger(CustomerResource.class.getName());
-	 CustomerDAO dao;
+	 CustomerDAO customerDAO;
+	 AccountDAO  accountDAO;
 	 
 	 public CustomerResource(){
-		 dao= new CustomerDAOImpl();
+		 customerDAO= new CustomerDAOImpl();
+		 accountDAO = new AccountDAOImpl();
 	 }
 	 
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer newCustomer(Customer p) throws DALException {
-		logger.log(Level.WARNING,p.getLastName()+" received in customer resource");
+		logger.log(Level.INFO,p.getLastName()+" received in customer resource");
 		//p.setCreationDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		p.setCreationDate(new Date());
 		p.setStatus("New");
-		p=dao.saveCustomer(p);
+		p=customerDAO.saveCustomer(p);
 		return p;
 	}
 	
@@ -42,7 +45,7 @@ public class CustomerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Customer>  getCustomers() throws DALException{
 		logger.warning((new Date()).toString()+" Get all Customers");
-		return dao.getCustomers();
+		return customerDAO.getCustomers();
 	}
 	
 	@GET
@@ -50,7 +53,7 @@ public class CustomerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer getCustomerById(@PathParam("id")long id) throws DALException{
 		logger.warning((new Date()).toString()+" Get Customer "+id);
-		return dao.getCustomerById(id);
+		return customerDAO.getCustomerById(id);
     }
 	
 	@GET
@@ -58,7 +61,7 @@ public class CustomerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer getCustomerByName(@PathParam("pname")String pname) throws DALException{
 		logger.warning("Get customer:"+pname);
-		return dao.getCustomerByName(pname);
+		return customerDAO.getCustomerByName(pname);
     }
 
 	
@@ -66,7 +69,7 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer updateCustomer(Customer c) throws DALException {
-		return dao.updateCustomer(c);	
+		return customerDAO.updateCustomer(c);	
 	}
 	
 	@DELETE
@@ -74,9 +77,12 @@ public class CustomerResource {
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteProject(@PathParam("id")long id) throws DALException {
-		Customer p = dao.getCustomerById(id);
+		Customer p = customerDAO.getCustomerById(id);
 		logger.log(Level.WARNING,p.getId()+" customer:"+p.getName()+" to delete");
-		return "\""+dao.deleteCustomer(id)+"\"";
+		return "\""+customerDAO.deleteCustomer(id)+"\"";
 	}
+
+	
+
 	
 }

@@ -14,6 +14,7 @@ public class RAIntegrationApplication extends Application {
 		classes.add(LoginResource.class);
 		classes.add(CustomerResource.class);
 		classes.add(PurchaseOrderResource.class);
+		classes.add(AccountResource.class);
 		return classes;
 	}
 

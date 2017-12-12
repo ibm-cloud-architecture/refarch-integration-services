@@ -10,6 +10,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import ibm.ra.integration.AccountResource;
 import ibm.ra.integration.DALException;
 import po.model.Account;
 import po.model.Customer;
@@ -18,9 +19,9 @@ import po.model.Customer;
 public class TestCustomerService extends BaseTest{
 
 	private static long customerId=0;
+	AccountResource as = new AccountResource();
 
-
-	private Customer buildCustomer(){
+	public static Customer buildCustomer(){
 		Customer c = new Customer();
 		c.setFirstName("Paul");
 		c.setLastName("LeBoulanger");
@@ -53,6 +54,11 @@ public class TestCustomerService extends BaseTest{
 			Assert.assertNotNull(cOut);
 			Assert.assertNotNull(cOut.getId());
 			customerId=cOut.getId();
+
+			Account aOut = as.getAccountByAccountNumber(cOut.getAccount().getAccountNumber());
+			Assert.assertNotNull(aOut);
+			Assert.assertNotNull(aOut.getId());
+			System.out.println("customer id:"+cOut.getId()+ " account id:"+aOut.getId());
 		} catch (DALException e) {
 			e.printStackTrace();
 			fail("Persistence of customer failed");

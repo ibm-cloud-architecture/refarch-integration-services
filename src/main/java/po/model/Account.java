@@ -26,6 +26,7 @@ public class Account {
 	protected double international;
 	protected double local;
 	protected double balance;
+	protected double usage;
 	protected int dropped;
 	@Column(nullable=true, length=10)
 	protected String paymentMethod;
@@ -132,5 +133,13 @@ public class Account {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public double getUsage() {
+		return usage;
+	}
+
+	public void setUsage(double usage) {
+		this.usage = usage;
 	}
 }

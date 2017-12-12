@@ -23,7 +23,7 @@ public class Customer extends Party{
 	@Column(nullable=true, length=10)
 	protected String gender;
 	
-	protected int age;
+	protected double age;
 	protected int children;
 	protected double estimatedIncome;
 	protected boolean carOwner;
@@ -70,11 +70,11 @@ public class Customer extends Party{
 		this.emailAddress = emailAddress;
 	}
 
-	public int getAge() {
+	public double getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(double age) {
 		this.age = age;
 	}
 

@@ -1,4 +1,8 @@
-alter table accounts add column  balance decimal(8,2)
+alter table accounts add column  usage decimal(8,2)
 
 CREATE INDEX I_CCOUNTS_CUSTOMER 
     ON ACCOUNTS (CUSTOMER_ID) 
+
+create table OPENJPA_SEQUENCE_TABLE (ID SMALLINT NOT NULL, SEQUENCE_VALUE BIGINT, PRIMARY KEY (ID)) 
+
+delete CUSTOMERS where ID = 1
