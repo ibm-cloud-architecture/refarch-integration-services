@@ -23,6 +23,7 @@ public class CustomerAccount {
 	protected String churn;
 	protected String zipcode;
 	protected String maritalStatus;
+	protected String mostDominantTone;
 	// Account account;
 	protected String accountNumber;
 	protected double longDistance;
@@ -36,6 +37,7 @@ public class CustomerAccount {
 	protected String localBillType;
 	protected String ratePlan;
 	protected String deviceOwned;
+	
 	
 	public CustomerAccount(Customer c){
 		this.id=c.getId();
@@ -54,6 +56,7 @@ public class CustomerAccount {
 		this.churn=c.getChurn();
 		this.maritalStatus=c.getMaritalStatus();
 		this.zipcode=c.getZipCode();
+		this.mostDominantTone=c.getMostDominantTone();
 		if (c.getAccount() != null) {
 			this.accountNumber=c.getAccount().getAccountNumber();
 			this.longDistance=c.getAccount().getLongDistance();
@@ -89,6 +92,7 @@ public class CustomerAccount {
 		c.setChurn(ca.getChurn());
 		c.setZipCode(ca.getZipcode());
 		c.setMaritalStatus(ca.getMaritalStatus());
+		c.setMostDominantTone(ca.getMostDominantTone());
 		Account a = new Account();
 		a.setAccountNumber(ca.getAccountNumber());
 		a.setLongDistance(ca.getLongDistance());
@@ -340,6 +344,14 @@ public class CustomerAccount {
 
 	public void setMaritalStatus(String maritalStatus) {
 		this.maritalStatus = maritalStatus;
+	}
+
+	public String getMostDominantTone() {
+		return mostDominantTone;
+	}
+
+	public void setMostDominantTone(String mostDominantTone) {
+		this.mostDominantTone = mostDominantTone;
 	}
 
 

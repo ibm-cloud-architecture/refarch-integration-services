@@ -31,6 +31,7 @@ public class Customer extends Party{
 	protected String churn="NotEvaluated";
 	protected String maritalStatus;
 	protected String zipCode;
+	protected String mostDominantTone;
 	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	protected Account account;
 	
@@ -154,6 +155,14 @@ public class Customer extends Party{
 
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
+	}
+
+	public String getMostDominantTone() {
+		return mostDominantTone;
+	}
+
+	public void setMostDominantTone(String mostDominantTone) {
+		this.mostDominantTone = mostDominantTone;
 	}
 
 
