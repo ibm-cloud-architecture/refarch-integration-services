@@ -22,14 +22,16 @@ public class Customer extends Party{
 	protected String emailAddress;
 	@Column(nullable=true, length=10)
 	protected String gender;
-	
 	protected double age;
 	protected int children;
 	protected double estimatedIncome;
 	protected boolean carOwner;
 	@Column(nullable=true, length=50)
 	protected String profession;
-	@OneToOne(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
+	protected String churn="NotEvaluated";
+	protected String maritalStatus;
+	protected String zipCode;
+	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	protected Account account;
 	
 	public Customer(){
@@ -114,6 +116,10 @@ public class Customer extends Party{
 		return carOwner;
 	}
 
+	public boolean getCarOwner() {
+		return carOwner;
+	}
+	
 	public void setCarOwner(boolean carOwner) {
 		this.carOwner = carOwner;
 	}
@@ -125,4 +131,30 @@ public class Customer extends Party{
 	public void setAccount(Account account) {
 		this.account = account;
 	}
+
+	public String getChurn() {
+		return churn;
+	}
+
+	public void setChurn(String churn) {
+		this.churn = churn;
+	}
+
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
+
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
+
+
 }

@@ -14,17 +14,20 @@ import com.google.gson.JsonParseException;
 
 import ibm.ra.integration.CustomerResource;
 import ibm.ra.integration.DALException;
+import po.dto.model.CustomerAccount;
 import po.model.Customer;
 
 /**
- * Use JDBC directly to save to DB2 Warehouse on ICP
+ * Use JDBC directly to save data from DB2 backend to DB2 Warehouse on ICP
  * @author jeromeboyer
  *
  */
 public class Db2WarehousePersister {
 
 	protected final static CustomerRestClient client = new CustomerRestClient();
-	private Gson parser;
+	// Need JSON parser to send over HTTP REST api
+	private Gson parser=null;
+	
 	
 	public Db2WarehousePersister(){
 		JsonDeserializer<Date> deser = new JsonDeserializer<Date>() {
@@ -36,25 +39,28 @@ public class Db2WarehousePersister {
 			};
 		parser = new GsonBuilder().registerTypeAdapter(Date.class, deser).create();
 	}
-	
-	
-	
-	private Customer updateName(Customer c){
-		String sid =c.getId().toString();
-		System.out.println(sid+" "+c.getEmailAddress());
-		c.setName(c.getName().replace("null", sid));
-		c.setFirstName(c.getFirstName().replace("null",sid));
-		c.setEmailAddress(c.getEmailAddress().replaceAll("null", sid));
-		return c;
+
+	/**
+	 * As a tool it can be called from script
+	 * @param args
+	 */
+	public static void main(String... args) { 
+		Db2WarehousePersister tool = new Db2WarehousePersister();
+		try {
+			tool.useLocalServiceToAccessDB2();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 	
 	public void useLocalServiceToAccessDB2() throws DALException{
 		 CustomerResource serv = new CustomerResource();
-		 Collection<Customer> l=serv.getCustomers();
-		 Iterator<Customer> i = l.iterator();
+		 Collection<CustomerAccount> l=serv.getCustomers();
+		 Iterator<CustomerAccount> i = l.iterator();
 		 int count=0;
 		 while (i.hasNext()) {
-			 Customer c = i.next();
+			 CustomerAccount c = i.next();
 			 if (c.getName().contains("null")) {
 				 c=updateName(c);
 				 serv.updateCustomer(c);
@@ -64,12 +70,25 @@ public class Db2WarehousePersister {
 		 }
 	}
 	
-	public static void main(String... args) { 
-		Db2WarehousePersister tool = new Db2WarehousePersister();
-		try {
-			tool.useLocalServiceToAccessDB2();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
+	private CustomerAccount updateName(CustomerAccount c){
+		String sid =c.getId().toString();
+		System.out.println(sid+" "+c.getEmailAddress());
+		c.setName(c.getName().replace("null", sid));
+		c.setFirstName(c.getFirstName().replace("null",sid));
+		c.setEmailAddress(c.getEmailAddress().replaceAll("null", sid));
+		return c;
+	}
+
+
+
+	public Gson getParser() {
+		return parser;
+	}
+
+
+
+	public void setParser(Gson parser) {
+		this.parser = parser;
 	}
 }

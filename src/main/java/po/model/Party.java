@@ -24,6 +24,7 @@ public abstract class Party {
 	protected String type;
 	@Column(nullable=true, length=10)
 	protected String status;
+	protected String zipCode;
 	protected Date creationDate;
 	protected Date updateDate;
 	
@@ -68,6 +69,16 @@ public abstract class Party {
 	}
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+
+	public String getZipCode() {
+		return zipCode;
+	}
+
+
+	public void setZipCode(String zipcode) {
+		this.zipCode = zipcode;
 	}
 
 }

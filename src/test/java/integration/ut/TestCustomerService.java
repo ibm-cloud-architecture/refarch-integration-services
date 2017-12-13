@@ -12,6 +12,7 @@ import org.junit.runners.MethodSorters;
 
 import ibm.ra.integration.AccountResource;
 import ibm.ra.integration.DALException;
+import po.dto.model.CustomerAccount;
 import po.model.Account;
 import po.model.Customer;
 
@@ -50,12 +51,12 @@ public class TestCustomerService extends BaseTest{
 		System.out.println("Create customer");
 		Customer c = buildCustomer();
 		try {
-			Customer cOut=serv.newCustomer(c);
+			CustomerAccount cOut=serv.newCustomer(new CustomerAccount(c));
 			Assert.assertNotNull(cOut);
 			Assert.assertNotNull(cOut.getId());
 			customerId=cOut.getId();
 
-			Account aOut = as.getAccountByAccountNumber(cOut.getAccount().getAccountNumber());
+			Account aOut = as.getAccountByAccountNumber(cOut.getAccountNumber());
 			Assert.assertNotNull(aOut);
 			Assert.assertNotNull(aOut.getId());
 			System.out.println("customer id:"+cOut.getId()+ " account id:"+aOut.getId());
@@ -73,14 +74,14 @@ public class TestCustomerService extends BaseTest{
 		try {
 			if (customerId == 0) {
 				c = buildCustomer();
-				Customer cOut=serv.newCustomer(c);
+				CustomerAccount cOut=serv.newCustomer(new CustomerAccount(c));
 				customerId=cOut.getId();		
 			} 
 			System.out.println("Load customer with id:"+customerId);
-			c=serv.getCustomerById(customerId);
-			Assert.assertNotNull(c);
-			Assert.assertTrue("Paul".equals(c.getFirstName()));
-			System.out.println(c.toString());
+			CustomerAccount ca=serv.getCustomerById(customerId);
+			Assert.assertNotNull(ca);
+			Assert.assertTrue("Paul".equals(ca.getFirstName()));
+			System.out.println(ca.toString());
 		} catch (DALException e) {
 			e.printStackTrace();
 			fail("Load customer failed");
@@ -94,8 +95,8 @@ public class TestCustomerService extends BaseTest{
 		Customer c = buildCustomer();
 		c.setLastName("Martin");
 		try {
-			Customer cOut=serv.newCustomer(c);
-			Collection<Customer> cl=serv.getCustomers();
+			CustomerAccount cOut=serv.newCustomer(new CustomerAccount(c));
+			Collection<CustomerAccount> cl=serv.getCustomers();
 			Assert.assertNotNull(cl);
 			Assert.assertTrue(cl.size()>1);
 		} catch (DALException e) {
@@ -108,13 +109,13 @@ public class TestCustomerService extends BaseTest{
 	@Test
 	public void testUpdateCustomer(){
 		System.out.println("Update customer "+customerId);
-		Customer c = null;
+		CustomerAccount c = null;
 		try {
 			c=serv.getCustomerById(customerId);
 			Assert.assertNotNull(c);
 			c.setEstimatedIncome(78000);
 			serv.updateCustomer(c);
-			Customer c2=serv.getCustomerById(customerId);
+			CustomerAccount c2=serv.getCustomerById(customerId);
 			Assert.assertTrue("Paul".equals(c2.getFirstName()));
 			Assert.assertTrue(78000 == c2.getEstimatedIncome());
 			System.out.println(c.toString());

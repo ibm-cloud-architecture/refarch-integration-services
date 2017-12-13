@@ -1,5 +1,6 @@
 package ibm.ra.integration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
@@ -15,7 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import po.model.Account;
+import po.dto.model.CustomerAccount;
 import po.model.Customer;
 
 @Path("/customers")
@@ -32,44 +33,56 @@ public class CustomerResource {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Customer newCustomer(Customer p) throws DALException {
-		logger.log(Level.INFO,p.getLastName()+" received in customer resource");
+	public CustomerAccount newCustomer(CustomerAccount ca) throws DALException {
+		logger.log(Level.INFO,ca.getLastName()+" received in customer resource");
 		//p.setCreationDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		p.setCreationDate(new Date());
-		p.setStatus("New");
-		p=customerDAO.saveCustomer(p);
-		return p;
+		Customer c = CustomerAccount.toCustomer(ca);
+		c.setCreationDate(new Date());
+		c.setStatus("New");
+		c=customerDAO.saveCustomer(c);
+		return new CustomerAccount(c);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Customer>  getCustomers() throws DALException{
+	public Collection<CustomerAccount>  getCustomers() throws DALException{
 		logger.warning((new Date()).toString()+" Get all Customers");
-		return customerDAO.getCustomers();
+		Collection<CustomerAccount> cal= new ArrayList<CustomerAccount>();
+
+		for (Customer c: customerDAO.getCustomers()) {
+			cal.add(new CustomerAccount(c));
+		}
+ 		return cal;
 	}
 	
 	@GET
 	@Path(value="/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Customer getCustomerById(@PathParam("id")long id) throws DALException{
+	public CustomerAccount getCustomerById(@PathParam("id")long id) throws DALException{
 		logger.warning((new Date()).toString()+" Get Customer "+id);
-		return customerDAO.getCustomerById(id);
+		Customer c = customerDAO.getCustomerById(id);
+		if (c != null) return new CustomerAccount(c);
+		return new CustomerAccount();
     }
 	
 	@GET
 	@Path(value="/name/{pname}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Customer getCustomerByName(@PathParam("pname")String pname) throws DALException{
+	public CustomerAccount getCustomerByName(@PathParam("pname")String pname) throws DALException{
 		logger.warning("Get customer:"+pname);
-		return customerDAO.getCustomerByName(pname);
+		Customer c = customerDAO.getCustomerByName(pname);
+		if (c != null) return new CustomerAccount(c);
+		return new CustomerAccount(); 
     }
 
 	
 	@PUT
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Customer updateCustomer(Customer c) throws DALException {
-		return customerDAO.updateCustomer(c);	
+	public CustomerAccount updateCustomer(CustomerAccount ca) throws DALException {
+		Customer c = CustomerAccount.toCustomer(ca);
+		c.setUpdateDate(new Date());
+		return new CustomerAccount(customerDAO.updateCustomer(c));	
 	}
 	
 	@DELETE

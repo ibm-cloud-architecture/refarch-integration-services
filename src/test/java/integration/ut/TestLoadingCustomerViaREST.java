@@ -19,6 +19,9 @@ import com.google.gson.JsonParseException;
 import ibm.ra.util.CustomerRestClient;
 import po.model.Customer;
 
+/*
+ * You need to get the microservice deployed
+ */
 public class TestLoadingCustomerViaREST {
 
 	protected static CustomerRestClient client;

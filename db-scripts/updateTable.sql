@@ -1,8 +1,8 @@
-alter table accounts add column  usage decimal(8,2)
+alter table accounts add column  updatedate timestamp
 
 CREATE INDEX I_CCOUNTS_CUSTOMER 
     ON ACCOUNTS (CUSTOMER_ID) 
 
 create table OPENJPA_SEQUENCE_TABLE (ID SMALLINT NOT NULL, SEQUENCE_VALUE BIGINT, PRIMARY KEY (ID)) 
 
-delete CUSTOMERS where ID = 1
+alter table customers add column churn VARCHAR(20);

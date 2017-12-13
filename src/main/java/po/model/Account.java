@@ -1,5 +1,7 @@
 package po.model;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +36,9 @@ public class Account {
 	protected String localBillType;
 	@Column(nullable=true, length=10)
 	protected String ratePlan;
+	protected String deviceOwned;
+	protected Date creationDate;
+	protected Date updateDate;
 	@OneToOne(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
 	protected Customer customer;
 	
@@ -141,5 +146,29 @@ public class Account {
 
 	public void setUsage(double usage) {
 		this.usage = usage;
+	}
+
+	public String getDeviceOwned() {
+		return deviceOwned;
+	}
+
+	public void setDeviceOwned(String deviceOwned) {
+		this.deviceOwned = deviceOwned;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 }
