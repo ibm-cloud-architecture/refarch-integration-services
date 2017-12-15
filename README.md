@@ -141,9 +141,10 @@ Then use the `docker build -t ibmcase/customerms .` command to build a docker im
 
 You can test locally using `docker run -p 9080:9080 ibmcase/customerms` and then points your webbrowser to `http://localhost:9080/caseserv/index.html`. If the front end page is loaded your configuration works!.
 
-We also added some integration test under the package
+We also added some integration test under the package `ibm.caseserv.itests` folder.
+
 ## IBM Cloud Private deployment
-We are following the same approach as the other micro service deployment, for example as describe in the Case web app or the Data Access layer project.
+We are following the same approach as the other micro service deployment we do at http://github.com/ibm-cloud-architecture, for example the [Case web app] or the [Data Access layer] projects.
 * dockerize the application with Liberty
 * define helm charts with deployment configuration
 * use `kubectl`  and `helm` CLI to deploy the helm chart and work on the deployed pod.

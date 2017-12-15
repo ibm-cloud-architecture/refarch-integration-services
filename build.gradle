@@ -49,7 +49,7 @@ ext {
     // Liberty server properties
     wlpServerName = 'defaultServer'
     serverDirectory = "${project.buildDir}/wlp/usr/servers/${wlpServerName}"
-    libertyTestPort = 9081
+    libertyTestPort = 9080
     // This is set in the ibm-web-ext.xml file
     warContext = 'caseserv'
 
@@ -112,19 +112,20 @@ liberty {
         apps = [war]
         name = 'caseserv'
         features {
-            name = ['apiDiscovery-1.0']
+            name = ['apiDiscovery-1.0', 'jpa-2.0','jaxrs-2.0']
             acceptLicense = true
         }
      }
 }
 
-/*
+
 check.dependsOn 'integrationTest'
 integrationTest.dependsOn 'libertyStart', 'testClasses'
 integrationTest.finalizedBy 'libertyStop'
 libertyStart.dependsOn 'libertyPackage'
+libertyPackage.dependsOn 'war'
 libertyStart.finalizedBy 'printMessageAboutRunningServer'
-*/
+
 task printMessageAboutRunningServer {
     doLast {
         println "The server is now running at http://localhost:${libertyTestPort}/${warContext}"
