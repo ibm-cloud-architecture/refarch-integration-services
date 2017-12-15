@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import ibm.caseserv.itests.CustomerRestClient;
 import po.model.Account;
 import po.model.Customer;
 

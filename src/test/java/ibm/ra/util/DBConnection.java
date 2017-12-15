@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import ibm.caseserv.itests.CustomerRestClient;
+
 public class DBConnection {
 	protected static Properties props = new Properties();
 	

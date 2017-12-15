@@ -1,40 +1,58 @@
 /*
 * Build a new service component
  */
+apply plugin: 'war'
+apply plugin: 'liberty'
 
-// Apply the java-library plugin to add support for Java Library
-// apply plugin: 'java-library'
+group = 'ibm.case.greencompute.customerms'
+version = '1-0-SNAPSHOT'
+description = 'Customer micro service for brown and green computes'
 
 buildscript {
     repositories {
+    	mavenLocal()
         mavenCentral()
     }
     dependencies {
  		classpath 'org.apache.openjpa:openjpa:2.4.2'
         classpath 'at.schmutterer.oss.gradle:gradle-openjpa:0.2.0'
+        classpath 'net.wasdev.wlp.gradle.plugins:liberty-gradle-plugin:2.0'
     }
-}
-
-plugins {
-  id 'java'
-  id 'war'
 }
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 // Java compiler compliance level
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 dependencies {
     providedCompile fileTree(dir: 'lib', include: ['*.jar'])
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile group: 'javax.json', name: 'javax.json-api', version:'1.0'
+    providedCompile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version:'2.0'
+    providedCompile group: 'io.swagger', name: 'swagger-annotations', version:'1.5.3'
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+    libertyRuntime group: 'com.ibm.websphere.appserver.runtime', name: 'wlp-webProfile7', version: '17.0.0.2'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.apache.cxf', name: 'cxf-rt-rs-client', version:'3.1.1'
+}
 
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+ext {
+    // Liberty server properties
+    wlpServerName = 'defaultServer'
+    serverDirectory = "${project.buildDir}/wlp/usr/servers/${wlpServerName}"
+    libertyTestPort = 9081
+    // This is set in the ibm-web-ext.xml file
+    warContext = 'caseserv'
+
 }
 
 sourceSets {
@@ -43,12 +61,13 @@ sourceSets {
   }
 }
 
-apply plugin:'openjpa'
+
 
 // See https://github.com/schmutterer/gradle-openjpa
+apply plugin:'openjpa'
 openjpa {
       files = fileTree(sourceSets.main.output.classesDir).matching {
-          include '**/model/**'
+          include 'po/model/**'
       }
 }
 
@@ -62,10 +81,51 @@ task processConfig(type: Copy) {
 
 test {
   jvmArgs "-javaagent:./lib/openjpa-all-2.4.2.jar"
+  exclude 'dash/icp/**'
+  exclude '**/fvt/**'
+}
+
+
+task integrationTest(type: Test) {
+    group 'Verification'
+    description 'Runs the integration tests.'
+    reports.html.destination = file("$buildDir/reports/it")
+    reports.junitXml.destination = file("$buildDir/test-results/it")
+    include '**/itests/**'
+    exclude '**/ut/**'
+
+    systemProperties = ['liberty.test.port': libertyTestPort]
 }
 
 war {
   dependsOn openjpaEnhance
   rootSpec.exclude("**/lib/db2jcc4.jar")
   rootSpec.exclude("**/lib/derby.jar")
+}
+
+liberty {
+    server{
+        bootstrapProperties = ['default.http.port': libertyTestPort]
+        configFile = file("src/main/liberty/config/server.xml")
+        apps = [war]
+        name = 'caseserv'
+        features {
+            name = ['apiDiscovery-1.0']
+            acceptLicense = true
+        }
+     }
+}
+
+/*
+check.dependsOn 'integrationTest'
+integrationTest.dependsOn 'libertyStart', 'testClasses'
+integrationTest.finalizedBy 'libertyStop'
+libertyStart.dependsOn 'libertyPackage'
+libertyStart.finalizedBy 'printMessageAboutRunningServer'
+*/
+task printMessageAboutRunningServer {
+    doLast {
+        println "The server is now running at http://localhost:${libertyTestPort}/${warContext}"
+        println "To stop the server run 'gradle libertyStop'"
+    }
 }

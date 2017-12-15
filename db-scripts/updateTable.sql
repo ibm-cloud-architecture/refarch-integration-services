@@ -5,4 +5,4 @@ CREATE INDEX I_CCOUNTS_CUSTOMER
 
 create table OPENJPA_SEQUENCE_TABLE (ID SMALLINT NOT NULL, SEQUENCE_VALUE BIGINT, PRIMARY KEY (ID)) 
 
-alter table customers add column churn VARCHAR(20);
+alter table customers add column MOSTDOMINANTTONE VARCHAR(20);

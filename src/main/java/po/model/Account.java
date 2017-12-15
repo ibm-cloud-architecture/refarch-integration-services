@@ -22,20 +22,21 @@ public class Account {
 	protected Long id=null;
 	@Column(nullable=false, length=20)
 	protected String accountNumber;
+	protected double balance;
+	protected int dropped;
 	protected double longDistance;
 	@Column(nullable=true, length=10)
 	protected String longDistanceBillType;
 	protected double international;
 	protected double local;
-	protected double balance;
-	protected double usage;
-	protected int dropped;
+
 	@Column(nullable=true, length=10)
 	protected String paymentMethod;
 	@Column(nullable=true, length=10)
 	protected String localBillType;
 	@Column(nullable=true, length=10)
 	protected String ratePlan;
+	protected double usage;
 	protected String deviceOwned;
 	protected Date creationDate;
 	protected Date updateDate;

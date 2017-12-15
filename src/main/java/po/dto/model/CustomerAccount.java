@@ -2,12 +2,19 @@ package po.dto.model;
 
 import po.model.Account;
 import po.model.Customer;
+import io.swagger.annotations.ApiModelProperty;
 
 
 
+/**
+ * 
+ * @author jeromeboyer
+ *
+ */
 
 public class CustomerAccount {
 	protected Long id=null;
+	@ApiModelProperty(required = true)
 	protected String name;
 	protected String firstName;
 	protected String lastName;
@@ -15,11 +22,13 @@ public class CustomerAccount {
 	protected double age;
 	protected String gender;	
 	protected String type;
+	@ApiModelProperty(required = false, example = "New")
 	protected String status;
 	protected int children;
 	protected double estimatedIncome;
 	protected boolean carOwner;
 	protected String profession;
+	@ApiModelProperty(required = false, example = "Will be defined by the scoring service")
 	protected String churn;
 	protected String zipcode;
 	protected String maritalStatus;

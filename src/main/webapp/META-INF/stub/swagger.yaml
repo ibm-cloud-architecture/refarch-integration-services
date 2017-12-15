@@ -1,0 +1,165 @@
+---
+swagger: "2.0"
+info:
+  title: "Customer management micro service api"
+  version: "1.0.0"
+schemes:
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /api/customers:
+    get:
+      responses:
+        '200':
+          description: "200 OK"
+          schema:
+              $ref: "#/definitions/customers"
+      produces:
+        - application/json
+    post:
+      parameters:
+        - name: "customer"
+          required: true
+          in: "body"
+          schema:
+            $ref: "#/definitions/customer"
+      responses: 
+        '201': 
+          description: "Contact created"
+      consumes:
+        - application/json
+      produces: 
+        - application/json
+  /api/customers/{id}:
+    parameters:
+    - name: "id"
+      type: "string"
+      required: true
+      in: "path"
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            $ref: "#/definitions/customer"
+      operationId: "getId"
+    put:
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/customer"
+      operationId: "putId"
+      parameters:
+      - name: "customer"
+        required: true
+        in: "body"
+        schema:
+          $ref: "#/definitions/customer"
+    delete:
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            type: "string"
+      operationId: "deleteId"
+      parameters:
+      - name: "id"
+        type: "integer"
+        required: true
+        in: "path"
+        format: "int32"
+definitions:
+  customer:
+    properties:
+      id:
+        type: "integer"
+        description: "unique id"
+        format: "int64"
+      name:
+        type: "string"
+        description: "customer's name"
+      firstName:
+        type: "string"
+        description: "customer's first name"
+      lastName:
+        type: "string"
+        description: "customer's last name"
+      emailAddress:
+        type: "string"
+        description: "customer's email address"
+      age:
+        type: "integer"
+        format: "int32"
+      gender:
+        type: "string"
+        description: "customer's gender"  
+      type:
+        type: "string"
+        description: "customer's classification or type: Person or Organization"
+      status:
+        type: "string"
+        description: "customer's status: Person or Organization"
+      children:
+        type: "integer"
+        format: "int32"
+        description: "Number of dependants"
+      estimatedIncome:
+        type: "integer"
+        format: "double"
+        description: "Number of dependants"
+      carOwner:
+        type: "boolean"
+      profession:
+        type: "string"
+      churn:
+        type: "string"
+      zipcode:
+        type: "string"
+      maritalStatus:
+        type: "string"
+        description: "One of: Married, Single"
+      mostDominantTone:
+        type: "string"
+        description: "Derived attribute, output"
+      accountNumber:
+        type: "string"
+        description: "Customer has one account. It is output from backend"
+      longDistance:
+        type: "integer"
+        format: "double"
+      longDistanceBillType:
+        type: "string"
+      international:
+        type: "integer"
+        format: "double"
+      local:
+        type: "integer"
+        format: "double"
+      balance:
+        type: "integer"
+        format: "double"
+      usage:
+        type: "integer"
+        format: "double"
+      dropped:
+        type: "integer"
+        format: "int32"
+      paymentMethod: 
+        type: "string"
+      localBillType:
+        type: "string"
+      ratePlan:
+        type: "string"
+      deviceOwned:
+        type: "string"
+    additionalProperties: false
+  customers:
+    type: "array"
+    items:
+      $ref: "#/definitions/customer"
+
+
