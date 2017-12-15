@@ -82,7 +82,7 @@ task processConfig(type: Copy) {
 test {
   jvmArgs "-javaagent:./lib/openjpa-all-2.4.2.jar"
   exclude 'dash/icp/**'
-  exclude '**/fvt/**'
+  exclude '**/itests/**'
 }
 
 
@@ -101,6 +101,8 @@ war {
   dependsOn openjpaEnhance
   rootSpec.exclude("**/lib/db2jcc4.jar")
   rootSpec.exclude("**/lib/derby.jar")
+  rootSpec.exclude("**/classes/**/ut/**")
+  rootSpec.exclude("**/classes/**tests/**")
 }
 
 liberty {

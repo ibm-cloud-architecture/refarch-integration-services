@@ -19,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -128,6 +129,11 @@ public abstract class RestClient {
 	public String executeGetMethod(String url,List<NameValuePair> nvps) throws Exception {
 		return executeMethod(new HttpGet(buildCompleteUrl(url,nvps)));
 	}
+	
+	public String executeDeleteMethod(String url,List<NameValuePair> nvps) throws Exception {
+		return executeMethod(new HttpDelete(buildCompleteUrl(url,nvps)));
+	}
+
 
 	public String executeGetMethodAsJson(String url,List<NameValuePair> nvps)  throws Exception{
 		

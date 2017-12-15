@@ -15,10 +15,11 @@ public class ModelFactory {
 	}
 	
 	
-	public static CustomerAccount buildCustomerAccount(){
+	public static CustomerAccount createCustomerAccount(){
 		CustomerAccount c = new CustomerAccount();
 		c.setFirstName("Paul");
 		c.setLastName("LeBoulanger");
+		c.setName("Paul LeBoulanger");
 		c.setAge(40);
 		c.setCarOwner(false);
 		c.setChildren(2);
@@ -39,7 +40,7 @@ public class ModelFactory {
 	
 	public static Customer createCustomer(){
 		// use the DTO transformation and one source of bean definition
-		Customer c = CustomerAccount.toCustomer(ModelFactory.buildCustomerAccount());
+		Customer c = CustomerAccount.toCustomer(ModelFactory.createCustomerAccount());
 		// add here some overwrite
 		return c;
 	}

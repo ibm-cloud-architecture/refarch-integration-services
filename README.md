@@ -1,12 +1,13 @@
 # Set of RESTful services to manage customer and purchase order
 This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics).
 
-Updated 11/27/2017.
+Updated 12/15/2017.
 
 The goal of this project is to implement a set of RESTful services to manage customer and purchase order.
 
 ## Table of Contents
 * [Code explanation](#code-explanation)
+* [API definition](#api-definition)
 * [Build and deploy](#build-and-deploy)
 * [Install on ICP](#ibm-cloud-private-deployment)
 * [TDD](#test-driven-development)
@@ -118,6 +119,15 @@ In the DAO implementation for the get the list of customers method uses the JPA 
 * In the resource delegate calls to the DAO. Implement any business logic in the service. We did not decouple the API class from the service where the business logic can be done and tested in isolation. It is recommended to do this refactoring in the future.
 
 
+## API definition
+With Liberty it is possible to visualize the API definition for a deployed JAXRS resource. The product documentation is here, but to summarize we did two things:
+* define a yaml file for the swagger and save it to webapp/META-INF/stub folder.
+* modify the server.xml to add api discovery feature.
+
+Once the service is deployed using the URL http://localhost:9080/api/explorer/#/Customer_management_micro_service_API will display the API as you can see below:
+
+![](docs/customer-api.png)
+
 ## Build and Deploy
 The project was developed with [Eclipse Neon](http://www.eclipse.org/neon) with the following plugins added to the base eclipse:
 * Websphere Developer Tool for Liberty: using the Marketplace and searching WebSphere developer, then use the Eclipse way to install stuff.
@@ -129,9 +139,14 @@ To build the code you can use maven `nvm install` or gradle: `./gradlew build`. 
 
 Then use the `docker build -t ibmcase/customerms .` command to build a docker image including WebSphere liberty, the server configuration, and the war file deployed.
 
-You can test locally using `docker run -p 9080:9080 ibmcase/customerms` and then points to `http://localhost:9080/caseserv/index.html`. If the front end page is loaded your configuration works!.
+You can test locally using `docker run -p 9080:9080 ibmcase/customerms` and then points your webbrowser to `http://localhost:9080/caseserv/index.html`. If the front end page is loaded your configuration works!.
 
+We also added some integration test under the package
 ## IBM Cloud Private deployment
+We are following the same approach as the other micro service deployment, for example as describe in the Case web app or the Data Access layer project.
+* dockerize the application with Liberty
+* define helm charts with deployment configuration
+* use `kubectl`  and `helm` CLI to deploy the helm chart and work on the deployed pod.
 
 ## Test Driven Development
 To implement the DAO we start by specifying the DAO interface  and then implemented the unit tests or each method, before coding the JPA code. The junit tests are in the package `dao.jpa.ut`.
@@ -147,3 +162,5 @@ The test has a specific pesistence configuration that uses derby embedded so it 
  <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
 ```
 The `BaseTest` has an AfterClass method to delete the database.
+
+When running the test in Eclipse be sure to add to the vm arg of each test, the following `-javaagent:./lib/openjpa-all-2.4.2.jar` to get the entities JPA enhanced.

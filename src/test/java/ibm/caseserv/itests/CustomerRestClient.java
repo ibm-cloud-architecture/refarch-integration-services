@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ibm.ra.util.RestClient;
+import po.dto.model.CustomerAccount;
 import po.model.Customer;
 
 
@@ -37,7 +38,7 @@ public class CustomerRestClient extends RestClient {
 			props.load(fin);
 		} catch (IOException e) {
 			e.printStackTrace();
-			props.setProperty("customerjaxrs", "172.16.40.131");
+			props.setProperty("customerjaxrs", "localhost");
 		}
 	}
 
@@ -45,8 +46,13 @@ public class CustomerRestClient extends RestClient {
 		init();
 	}
 
+	public CustomerRestClient(Properties p){
+		props=p;
+		init();
+	}
+	
 	private void init(){
-		this.setPort(80);
+		this.setPort(Integer.parseInt(props.getProperty("port")));
 		this.setProtocol(props.getProperty("protocol"));
 		this.setBaseUrl(props.getProperty("webcontext"));
 		setHost( new HttpHost(props.getProperty("customerjaxrs"),this.getPort(),props.getProperty("protocol")));
@@ -85,7 +91,7 @@ public class CustomerRestClient extends RestClient {
 		return executeMethod(postMethod);
 	}
 		
-	public String executeCustomerPost(String url,Customer c) throws Exception {
+	public String executeCustomerPost(String url,CustomerAccount c) throws Exception {
 		String s= parser.toJson(c);
 		return executePostMethodAsJson(url,s);
 	}
@@ -98,7 +104,7 @@ public class CustomerRestClient extends RestClient {
 		return executeMethod(postMethod);
 	}
 	
-	public String executeCustomerPut(String url,Customer c) throws Exception {
+	public String executeCustomerPut(String url,CustomerAccount c) throws Exception {
 		String s= parser.toJson(c);
 		return executePutMethodAsJson(url,s);
 	}

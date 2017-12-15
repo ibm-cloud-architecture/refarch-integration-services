@@ -30,7 +30,6 @@ public class Customer extends Party{
 	protected String profession;
 	protected String churn="NotEvaluated";
 	protected String maritalStatus;
-	protected String zipCode;
 	protected String mostDominantTone;
 	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	protected Account account;
