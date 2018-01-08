@@ -16,7 +16,6 @@ import ibm.caseserv.itests.CustomerRestClient;
 import ibm.ra.integration.CustomerResource;
 import ibm.ra.integration.DALException;
 import po.dto.model.CustomerAccount;
-import po.model.Customer;
 
 /**
  * Use JDBC directly to save data from DB2 backend to DB2 Warehouse on ICP

@@ -1,6 +1,5 @@
 CREATE TABLE ACCOUNTS (
-  id INTEGER NOT NULL, 
-  accountNumber VARCHAR(50), 
+  accountNumber VARCHAR(50) NOT NULL, 
   balance DECIMAL(8,2),
   dropped INTEGER, 
   international DECIMAL, 
@@ -15,16 +14,14 @@ CREATE TABLE ACCOUNTS (
   creationDate TIMESTAMP, 
   updateDate TIMESTAMP, 
   CUSTOMER_ID BIGINT,
-  PRIMARY KEY (id));
-  
-
-create table DB2INST1.OPENJPA_SEQUENCE_TABLE (ID SMALLINT NOT NULL, SEQUENCE_VALUE 
-        BIGINT, PRIMARY KEY (ID)) 
+  PRIMARY KEY (accountNumber));
 
 
 CREATE INDEX I_CCOUNTS_CUSTOMER 
     ON ACCOUNTS (CUSTOMER_ID);
 
+ CREATE INDEX I_CUSTOMER_ACCOUNT 
+    ON CUSTOMERS (ACCOUNT_ACCOUNTNUMBER);
 
 CREATE TABLE CUSTOMERS 
 (id INTEGER NOT NULL, 
@@ -34,16 +31,20 @@ CREATE TABLE CUSTOMERS
  emailAddress VARCHAR(150), 
  status VARCHAR(20), 
  type VARCHAR(10), 
- updateDate TIMESTAMP, 
  age INTEGER, 
  carOwner SMALLINT, 
  children INTEGER, 
- MOSTDOMINANTTONE VARCHAR(10),
  estimatedIncome DOUBLE, 
+ churn VARCHAR(20), 
+ churnRisk DOUBLE,
  gender VARCHAR(10), 
+ maritalStatus  VARCHAR(50), 
+ mostDominantTone VARCHAR(50), 
  profession VARCHAR(100), 
+  zipcode VARCHAR(20), 
  creationDate TIMESTAMP, 
- ACCOUNT_ID BIGINT,
+ updateDate TIMESTAMP, 
+ ACCOUNT_ACCOUNTNUMBER VARCHAR(20),
  PRIMARY KEY (id)) 
         
 COMMIT;

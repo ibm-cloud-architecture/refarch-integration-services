@@ -26,19 +26,28 @@ import io.swagger.annotations.ApiResponses;
 import po.dto.model.CustomerAccount;
 import po.model.Customer;
 
- 
+
 @Path("/customers")
 @Api("Customer management micro service API")
 public class CustomerResource {
 	 Logger logger = Logger.getLogger(CustomerResource.class.getName());
 	 CustomerDAO customerDAO;
 	 AccountDAO  accountDAO;
-	 
+
 	 public CustomerResource(){
 		 customerDAO= new CustomerDAOImpl();
 		 accountDAO = new AccountDAOImpl();
 	 }
 	 
+	@GET
+	@Path("version")
+	@Produces(MediaType.TEXT_PLAIN)
+	@ApiOperation("Create a new customer")
+	@ApiResponses({ @ApiResponse(code = 200, message = "version 1.0.0 12/15", response = String.class) })
+	public Response getVersion(){
+		return Response.ok().entity(new String("version 1.0.0")).build();
+	}
+	
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -54,7 +63,7 @@ public class CustomerResource {
 		c=customerDAO.saveCustomer(c);
 		return Response.status(Status.CREATED).entity("{\"id\":" + c.getId() + "}").build();
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all customers",responseContainer = "array", response = CustomerAccount.class)
@@ -67,29 +76,29 @@ public class CustomerResource {
 		}
  		return cal;
 	}
-	
+
 	@GET
-	@Path(value="/{id}")
+    @Path("/{id}")
 	@ApiOperation(value = "Get customer and his/her account with ID")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = CustomerAccount.class),
 		@ApiResponse(code = 404, message = "Customer not found") })
-	public Response getCustomerById(@PathParam("id")long id) throws DALException{
+	public Response getCustomerById(@PathParam("id")String id) throws DALException{
 		logger.warning((new Date()).toString()+" Get Customer "+id);
-		Customer c = customerDAO.getCustomerById(id);
+		Customer c = customerDAO.getCustomerById(Long.parseLong(id));
 		if (c != null) {
 			return Response.ok().entity(new CustomerAccount(c)).build();
 		} else {
 			return Response.status(Status.NOT_FOUND).build();
 		}
     }
-	
+
 	@GET
 	@Path(value="/name/{pname}")
 	@ApiOperation(value = "Get customer and his/her account using the customer's name")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = CustomerAccount.class),
-		@ApiResponse(code = 404, message = "Customer not found") })
+	@ApiResponse(code = 404, message = "Customer not found") })
 	public Response getCustomerByName(@PathParam("pname")String pname) throws DALException{
 		logger.warning("Get customer:"+pname);
 		Customer c = customerDAO.getCustomerByName(pname);
@@ -100,9 +109,8 @@ public class CustomerResource {
 		}
     }
 
-	
+
 	@PUT
-	@Path(value="/{id}")
 	@ApiOperation(value = "Update customer with ID")
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -119,14 +127,15 @@ public class CustomerResource {
 			return Response.ok().build();
 		}
 	}
-	
+
 	@DELETE
-	@Path("{id}")
+	  @Path("{id \\d+}")
 	@ApiOperation(value = "Delete customer with ID")
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer delete"),
 		@ApiResponse(code = 404, message = "Customer not found") })
-	public Response deleteProject(@PathParam("id")long id) throws DALException {
+	public Response deleteProject(@PathParam("id")String sid) throws DALException {
+		long id = Long.parseLong(sid);
 		Customer p = customerDAO.getCustomerById(id);
 		if (p == null) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -136,5 +145,5 @@ public class CustomerResource {
 		}
 	}
 
-	
+
 }

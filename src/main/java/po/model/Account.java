@@ -16,25 +16,23 @@ import javax.persistence.Table;
 @Entity(name="Account")
 @Table(name="ACCOUNTS")
 @NamedQuery(name="Account.findAll", query="SELECT i FROM Account i")
-public class Account {
+public class Account {	
 	@Id
-	@GeneratedValue (strategy=GenerationType.SEQUENCE)
-	protected Long id=null;
 	@Column(nullable=false, length=20)
 	protected String accountNumber;
 	protected double balance;
 	protected int dropped;
 	protected double longDistance;
-	@Column(nullable=true, length=10)
+	@Column(nullable=true, length=30)
 	protected String longDistanceBillType;
 	protected double international;
 	protected double local;
 
 	@Column(nullable=true, length=10)
 	protected String paymentMethod;
-	@Column(nullable=true, length=10)
+	@Column(nullable=true, length=30)
 	protected String localBillType;
-	@Column(nullable=true, length=10)
+	@Column(nullable=true, length=30)
 	protected String ratePlan;
 	protected double usage;
 	protected String deviceOwned;
@@ -45,13 +43,6 @@ public class Account {
 	
 	public Account(){}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getAccountNumber() {
 		return accountNumber;

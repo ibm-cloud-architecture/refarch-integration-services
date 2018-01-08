@@ -1,5 +1,7 @@
 package ibm.ra.integration;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -33,6 +35,20 @@ public class AccountDAOImpl extends BaseDao  implements AccountDAO {
 		if (l != null && ! l.isEmpty()) 
 			return l.get(0);
 		return null;
+	}
+
+	@Override
+	public Collection<Account> getAccounts() throws DALException {
+		EntityManager em = getEntityManager();
+		List<Account> results = new ArrayList<Account>();
+		try{ 
+			Query query =em.createNamedQuery("Account.findAll");
+			results = query.getResultList ();
+		
+		} finally {
+			em.close();
+		}
+		return results;
 	}
 
 }

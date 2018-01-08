@@ -118,13 +118,14 @@ liberty {
      }
 }
 
-
+/*
 check.dependsOn 'integrationTest'
 integrationTest.dependsOn 'libertyStart', 'testClasses'
 integrationTest.finalizedBy 'libertyStop'
 libertyStart.dependsOn 'libertyPackage'
 libertyPackage.dependsOn 'war'
 libertyStart.finalizedBy 'printMessageAboutRunningServer'
+*/
 
 task printMessageAboutRunningServer {
     doLast {

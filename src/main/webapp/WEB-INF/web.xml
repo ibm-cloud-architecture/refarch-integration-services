@@ -16,7 +16,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>JAX-RS Servlet</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/api/v1/*</url-pattern>
 	</servlet-mapping>
 	<persistence-context-ref>
     <persistence-context-ref-name>inv/ctx</persistence-context-ref-name>

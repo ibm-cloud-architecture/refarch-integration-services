@@ -26,10 +26,11 @@ public class CustomerAccount {
 	protected String status;
 	protected int children;
 	protected double estimatedIncome;
-	protected boolean carOwner;
+	protected String carOwner;
 	protected String profession;
 	@ApiModelProperty(required = false, example = "Will be defined by the scoring service")
 	protected String churn;
+	protected double churnRisk;
 	protected String zipcode;
 	protected String maritalStatus;
 	protected String mostDominantTone;
@@ -63,6 +64,7 @@ public class CustomerAccount {
 		this.profession=c.getProfession();
 		this.carOwner=c.getCarOwner();
 		this.churn=c.getChurn();
+		this.churnRisk=c.getChurnRisk();
 		this.maritalStatus=c.getMaritalStatus();
 		this.zipcode=c.getZipCode();
 		this.mostDominantTone=c.getMostDominantTone();
@@ -99,6 +101,7 @@ public class CustomerAccount {
 		c.setCarOwner(ca.isCarOwner());
 		c.setProfession(ca.getProfession());
 		c.setChurn(ca.getChurn());
+		c.setChurnRisk(ca.getChurnRisk());
 		c.setZipCode(ca.getZipcode());
 		c.setMaritalStatus(ca.getMaritalStatus());
 		c.setMostDominantTone(ca.getMostDominantTone());
@@ -195,11 +198,16 @@ public class CustomerAccount {
 		this.estimatedIncome = estimatedIncome;
 	}
 
-	public boolean isCarOwner() {
+	public String isCarOwner() {
 		return carOwner;
 	}
 
-	public void setCarOwner(boolean carOwner) {
+	public String getCarOwner() {
+		return carOwner;
+	}
+
+	
+	public void setCarOwner(String carOwner) {
 		this.carOwner = carOwner;
 	}
 
@@ -361,6 +369,14 @@ public class CustomerAccount {
 
 	public void setMostDominantTone(String mostDominantTone) {
 		this.mostDominantTone = mostDominantTone;
+	}
+
+	public double getChurnRisk() {
+		return churnRisk;
+	}
+
+	public void setChurnRisk(double churnRisk) {
+		this.churnRisk = churnRisk;
 	}
 
 

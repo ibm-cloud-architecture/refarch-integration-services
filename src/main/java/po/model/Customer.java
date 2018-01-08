@@ -21,14 +21,16 @@ public class Customer extends Party{
 	@Column(nullable=false, length=150)
 	protected String emailAddress;
 	@Column(nullable=true, length=10)
+	// the following attributes may be used for analytics
 	protected String gender;
 	protected double age;
 	protected int children;
 	protected double estimatedIncome;
-	protected boolean carOwner;
+	protected String carOwner;
 	@Column(nullable=true, length=50)
 	protected String profession;
 	protected String churn="NotEvaluated";
+	protected double churnRisk;
 	protected String maritalStatus;
 	protected String mostDominantTone;
 	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
@@ -113,14 +115,14 @@ public class Customer extends Party{
 	}
 
 	public boolean isCarOwner() {
-		return carOwner;
+		return "Y".equals(getCarOwner().trim());
 	}
 
-	public boolean getCarOwner() {
+	public String getCarOwner() {
 		return carOwner;
 	}
 	
-	public void setCarOwner(boolean carOwner) {
+	public void setCarOwner(String carOwner) {
 		this.carOwner = carOwner;
 	}
 
@@ -162,6 +164,14 @@ public class Customer extends Party{
 
 	public void setMostDominantTone(String mostDominantTone) {
 		this.mostDominantTone = mostDominantTone;
+	}
+
+	public double getChurnRisk() {
+		return churnRisk;
+	}
+
+	public void setChurnRisk(double churnRisk) {
+		this.churnRisk = churnRisk;
 	}
 
 

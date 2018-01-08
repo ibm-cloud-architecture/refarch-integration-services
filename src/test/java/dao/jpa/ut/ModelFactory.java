@@ -17,11 +17,12 @@ public class ModelFactory {
 	
 	public static CustomerAccount createCustomerAccount(){
 		CustomerAccount c = new CustomerAccount();
+		c.setId(new Long(1));
 		c.setFirstName("Paul");
 		c.setLastName("LeBoulanger");
 		c.setName("Paul LeBoulanger");
 		c.setAge(40);
-		c.setCarOwner(false);
+		c.setCarOwner("F");
 		c.setChildren(2);
 		c.setEmailAddress("bp@supersite.com");
 		c.setEstimatedIncome(90000);

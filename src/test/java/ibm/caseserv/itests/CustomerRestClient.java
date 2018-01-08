@@ -20,7 +20,6 @@ import com.google.gson.GsonBuilder;
 
 import ibm.ra.util.RestClient;
 import po.dto.model.CustomerAccount;
-import po.model.Customer;
 
 
 
@@ -38,7 +37,7 @@ public class CustomerRestClient extends RestClient {
 			props.load(fin);
 		} catch (IOException e) {
 			e.printStackTrace();
-			props.setProperty("customerjaxrs", "localhost");
+			props.setProperty("customerms.host", "172.16.40.131");
 		}
 	}
 
@@ -46,30 +45,31 @@ public class CustomerRestClient extends RestClient {
 		init();
 	}
 
-	public CustomerRestClient(Properties p){
-		props=p;
-		init();
-	}
-	
 	private void init(){
 		this.setPort(Integer.parseInt(props.getProperty("port")));
 		this.setProtocol(props.getProperty("protocol"));
-		this.setBaseUrl(props.getProperty("webcontext"));
-		setHost( new HttpHost(props.getProperty("customerjaxrs"),this.getPort(),props.getProperty("protocol")));
+		this.setBaseUrl(props.getProperty("customerms.webcontext")+props.getProperty("customerms.baseapi"));
+		setHost( new HttpHost(props.getProperty("customerms.host"),this.getPort(),props.getProperty("protocol")));
         setHttpClient(HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build());
 	}
 
 	public CustomerRestClient(String name,int port){
 		this.setPort(port);
-		props.setProperty("customerjaxrs", name);
+		props.setProperty("customerms.host", name);
+		init();
+	}
+	
+
+	public CustomerRestClient(Properties p){
+		props=p;
 		init();
 	}
 
-	public static Properties getProps() {
+	public  Properties getProps() {
 		return props;
 	}
 
-	public static void setProps(Properties props) {
+	public  void setProps(Properties props) {
 		CustomerRestClient.props = props;
 	}
 	
@@ -95,6 +95,8 @@ public class CustomerRestClient extends RestClient {
 		String s= parser.toJson(c);
 		return executePostMethodAsJson(url,s);
 	}
+	
+	
 	
 	public String executePutMethodAsJson(String url,String json) throws Exception {
 		HttpPut postMethod = new HttpPut(buildCompleteUrl(url,null));

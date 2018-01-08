@@ -19,8 +19,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -57,9 +57,6 @@ public abstract class RestClient {
 
 	public URI buildCompleteUrl(String url,List<NameValuePair> nvps) {
 		URIBuilder builder = new URIBuilder();
-		if (!baseUrl.startsWith("/")) {
-			baseUrl="/"+baseUrl;
-		}
 		String newUrl=baseUrl; 	
 		if (url!=null) {
 			if (url.startsWith("/")) newUrl=baseUrl+url;

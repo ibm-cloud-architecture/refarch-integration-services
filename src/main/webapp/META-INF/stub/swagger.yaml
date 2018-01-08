@@ -10,15 +10,14 @@ consumes:
 produces:
 - "application/json"
 paths:
-  /api/customers:
+  /customers:
     get:
       responses:
         '200':
           description: "200 OK"
           schema:
               $ref: "#/definitions/customers"
-      produces:
-        - application/json
+      operationId: "getCustomers"
     post:
       parameters:
         - name: "customer"
@@ -26,14 +25,11 @@ paths:
           in: "body"
           schema:
             $ref: "#/definitions/customer"
-      responses: 
-        '201': 
+      responses:
+        '201':
           description: "Contact created"
-      consumes:
-        - application/json
-      produces: 
-        - application/json
-  /api/customers/{id}:
+      operationId: "postCustomer"
+  /customers/{id}:
     parameters:
     - name: "id"
       type: "string"
@@ -45,14 +41,14 @@ paths:
           description: "200 OK"
           schema:
             $ref: "#/definitions/customer"
-      operationId: "getId"
+      operationId: "getCustomerById"
     put:
       responses:
         200:
-          description: "Success"
+          description: "200 OK"
           schema:
             $ref: "#/definitions/customer"
-      operationId: "putId"
+      operationId: "putCustomer"
       parameters:
       - name: "customer"
         required: true
@@ -61,17 +57,32 @@ paths:
           $ref: "#/definitions/customer"
     delete:
       responses:
+        204:
+          description: "204 Entity successfully deleted"
+          schema:
+            type: "string"
+      operationId: "deleteCustomer"
+  /accounts:
+     get:
+        responses:
+          '200':
+            description: "200 OK"
+            schema:
+                $ref: "#/definitions/accounts"
+        operationId: "getAccounts"
+  /accounts/{accountNumber}:
+    parameters:
+    - name: "accountNumber"
+      type: "string"
+      required: true
+      in: "path"
+    get:
+      responses:
         200:
           description: "200 OK"
           schema:
-            type: "string"
-      operationId: "deleteId"
-      parameters:
-      - name: "id"
-        type: "integer"
-        required: true
-        in: "path"
-        format: "int32"
+            $ref: "#/definitions/account"
+      operationId: "getAccountByNumber"
 definitions:
   customer:
     properties:
@@ -96,7 +107,7 @@ definitions:
         format: "int32"
       gender:
         type: "string"
-        description: "customer's gender"  
+        description: "customer's gender"
       type:
         type: "string"
         description: "customer's classification or type: Person or Organization"
@@ -148,7 +159,7 @@ definitions:
       dropped:
         type: "integer"
         format: "int32"
-      paymentMethod: 
+      paymentMethod:
         type: "string"
       localBillType:
         type: "string"
@@ -161,5 +172,44 @@ definitions:
     type: "array"
     items:
       $ref: "#/definitions/customer"
-
-
+  account:
+    properties:
+      id:
+        type: "integer"
+        description: "unique id"
+        format: "int64"
+      accountNumber:
+        type: "string"
+        description: "account number"
+      balance:
+        type: "integer"
+        format: "double"
+      longDistance:
+        type: "integer"
+        format: "double"
+      longDistanceBillType:
+        type: "string"
+      international:
+        type: "integer"
+        format: "double"
+      local:
+        type: "integer"
+        format: "double"
+      usage:
+        type: "integer"
+        format: "double"
+      dropped:
+        type: "integer"
+        format: "int32"
+      paymentMethod:
+        type: "string"
+      localBillType:
+        type: "string"
+      ratePlan:
+        type: "string"
+      deviceOwned:
+        type: "string"
+  accounts:
+    type: "array"
+    items:
+      $ref: "#/definitions/account"

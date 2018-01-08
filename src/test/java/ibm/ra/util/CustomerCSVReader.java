@@ -10,8 +10,6 @@ import java.util.List;
 
 import ibm.caseserv.itests.CustomerRestClient;
 import po.dto.model.CustomerAccount;
-import po.model.Account;
-import po.model.Customer;
 
 public class CustomerCSVReader {
     
@@ -23,7 +21,7 @@ public class CustomerCSVReader {
 		if (args.length >0) {
 			cl = tool.readCustomersFromCSV(args[0]); 
 		} else {
-			cl = tool.readCustomersFromCSV("./dataset/customerMed.csv"); 
+			cl = tool.readCustomersFromCSV("./dataset/customer.csv"); 
 		}
 		
 		for (CustomerAccount c : cl) {
@@ -74,32 +72,32 @@ public class CustomerCSVReader {
     
     public  CustomerAccount createCustomer(String[] attributes){
     	CustomerAccount c = new CustomerAccount();
-    	//c.setId(Long.decode(attributes[0]));
+    	c.setId(Long.decode(attributes[0]));
     	c.setName("NameOf_"+attributes[0]);
     	c.setLastName(c.getName());
     	c.setFirstName("firstName_"+attributes[0]);
-    	c.setEmailAddress(c.getLastName()+"."+c.getFirstName()+"@ibm");
+    	c.setEmailAddress(c.getLastName()+"."+c.getFirstName()+"@supermail");
     	c.setType("Person");
     	c.setGender(attributes[1]);
     	c.setStatus(attributes[2]);
     	c.setChildren(Integer.parseInt(attributes[3]));
     	c.setEstimatedIncome(Double.parseDouble(attributes[4]));
-    	if ("Y".equals(attributes[5])) {
-    		c.setCarOwner(true);
-    	} else {
-    		c.setCarOwner(false);
-    	}
+    	c.setCarOwner(attributes[5]);
     	c.setAge(Double.parseDouble(attributes[6]));
+    	c.setMaritalStatus(attributes[7]);
+    	c.setZipcode(attributes[8]);
     	c.setAccountNumber("ACCT_"+c.getId());
-    	c.setLongDistance(Double.parseDouble(attributes[7]));
-    	c.setInternational(Double.parseDouble(attributes[8]));
-    	c.setLocal(Double.parseDouble(attributes[9]));
-        c.setDropped(Integer.parseInt(attributes[10]));
-        c.setPaymentMethod(attributes[11]);
-        c.setLocalBillType(attributes[12]);
-        c.setLongDistanceBillType(attributes[13]);
-        c.setUsage(Double.parseDouble(attributes[14]));
-        c.setRatePlan(attributes[15]);
+    	c.setLongDistance(Double.parseDouble(attributes[9]));
+    	c.setInternational(Double.parseDouble(attributes[10]));
+    	c.setLocal(Double.parseDouble(attributes[11]));
+        c.setDropped(Integer.parseInt(attributes[12]));
+        c.setPaymentMethod(attributes[13]);
+        c.setLocalBillType(attributes[14]);
+        c.setLongDistanceBillType(attributes[15]);
+        c.setUsage(Double.parseDouble(attributes[16]));
+        c.setRatePlan(attributes[17]);
+        c.setDeviceOwned(attributes[18]);
+        c.setChurn(attributes[19]);
     	return c;
     }
 }

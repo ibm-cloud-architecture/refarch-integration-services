@@ -15,8 +15,7 @@ import javax.persistence.InheritanceType;
 public abstract class Party {
 	
 	@Id
-	@GeneratedValue (strategy=GenerationType.SEQUENCE)
-	@Column(updatable = false, nullable = false)
+	@Column( nullable = false)
 	protected Long id=null;
 	@Column(nullable=false, length=100)
 	protected String name;
