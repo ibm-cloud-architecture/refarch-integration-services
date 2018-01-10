@@ -18,4 +18,6 @@ public interface CustomerDAO {
 	
 	String deleteCustomer(long id) throws DALException;
 
+	public Customer getCustomerByEmail(String email) throws DALException ;
+
 }

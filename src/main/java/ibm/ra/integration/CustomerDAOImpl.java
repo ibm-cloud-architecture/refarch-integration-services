@@ -102,4 +102,29 @@ public class CustomerDAOImpl extends BaseDao implements CustomerDAO {
 		 
 	}
 
+	@Override
+	public Customer getCustomerByEmail(String email) throws DALException {
+		if (email == null || email.isEmpty()) {
+			DALFault f = new DALFault("ERRDAO3012","Customer email is empty");
+			throw new DALException("DAL exception input data", f);
+		}
+		EntityManager em = getEntityManager();
+		List<Customer> l=null;
+		try{ 
+			Query query =em.createQuery("select p from Customer p where p.emailAddress = ?1",Customer.class);
+			query.setParameter (1, email);
+			l=query.getResultList();
+		} finally {
+			if (em != null) {
+				if (em.getTransaction().isActive()) {
+					em.getTransaction().rollback();
+				}
+				em.close();
+			}
+		}
+		if (l != null && ! l.isEmpty()) 
+			return l.get(0);
+		return null;
+	}
+
 }

@@ -40,9 +40,9 @@ public class CustomerResource {
 	 }
 	 
 	@GET
-	@Path("version")
+	@Path("/version")
 	@Produces(MediaType.TEXT_PLAIN)
-	@ApiOperation("Create a new customer")
+	@ApiOperation("Get version of the API")
 	@ApiResponses({ @ApiResponse(code = 200, message = "version 1.0.0 12/15", response = String.class) })
 	public Response getVersion(){
 		return Response.ok().entity(new String("version 1.0.0")).build();
@@ -94,14 +94,14 @@ public class CustomerResource {
     }
 
 	@GET
-	@Path(value="/name/{pname}")
-	@ApiOperation(value = "Get customer and his/her account using the customer's name")
+	@Path(value="/email/{email}")
+	@ApiOperation(value = "Get customer and his/her account using the customer's email")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = CustomerAccount.class),
 	@ApiResponse(code = 404, message = "Customer not found") })
-	public Response getCustomerByName(@PathParam("pname")String pname) throws DALException{
-		logger.warning("Get customer:"+pname);
-		Customer c = customerDAO.getCustomerByName(pname);
+	public Response getCustomerByEmail(@PathParam("email")String email) throws DALException{
+		logger.warning("Get customer:"+email);
+		Customer c = customerDAO.getCustomerByEmail(email);
 		if (c != null) {
 			return Response.ok().entity(new CustomerAccount(c)).build();
 		} else {
@@ -111,11 +111,12 @@ public class CustomerResource {
 
 
 	@PUT
+	@Path("/{id}")
 	@ApiOperation(value = "Update customer with ID")
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer updated"),
-		@ApiResponse(code = 404, message = "Customer not found") })
+    @ApiResponse(code = 404, message = "Customer not found") })
 	public Response updateCustomer(@ApiParam(required = true) CustomerAccount ca) throws DALException {
 		Customer c=customerDAO.getCustomerById(ca.getId());
 		if (c == null) {
@@ -129,7 +130,7 @@ public class CustomerResource {
 	}
 
 	@DELETE
-	  @Path("{id \\d+}")
+	@Path("/{id}")
 	@ApiOperation(value = "Delete customer with ID")
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer delete"),
