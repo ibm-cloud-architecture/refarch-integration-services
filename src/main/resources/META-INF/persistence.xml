@@ -8,6 +8,8 @@
     	<class>po.model.Party</class>
     	<class>po.model.Customer</class>
     	<class>po.model.Account</class>
+    	<class>po.model.Product</class>
+    	<class>po.model.ProductAssociation</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:db2://172.16.254.23:50000/CUSTDB:retrieveMessagesFromServerOnGetMessage=true;"/>
 			<property name="javax.persistence.jdbc.user" value="DB2INST1"/>

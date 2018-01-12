@@ -1,10 +1,14 @@
 package po.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -35,6 +39,9 @@ public class Customer extends Party{
 	protected String mostDominantTone;
 	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	protected Account account;
+	// Customer owns 1 to many devices / products
+	@OneToMany(mappedBy="customer",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	protected List<ProductAssociation> ownedProducts;
 	
 	public Customer(){
 	}
@@ -174,5 +181,24 @@ public class Customer extends Party{
 		this.churnRisk = churnRisk;
 	}
 
+	public List<ProductAssociation> getOwnedProducts() {
+		if (ownedProducts == null) ownedProducts = new ArrayList<ProductAssociation>();
+		return ownedProducts;
+	}
+
+	public void setOwnedProducts(List<ProductAssociation> ownedProducts) {
+		this.ownedProducts = ownedProducts;
+	}
+
+	public void addProduct(Product p,String pNumber){
+		ProductAssociation pa = new ProductAssociation();
+		pa.setCustomer(this);
+		pa.setProduct(p);
+		pa.setPhoneNumber(pNumber);
+		pa.setCustomerId(this.getId());
+		pa.setProductName(p.getName());
+		getOwnedProducts().add(pa);
+		//p.getOwners().add(pa);
+	}
 
 }

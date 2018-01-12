@@ -4,6 +4,7 @@ package dao.jpa.ut;
 import po.dto.model.CustomerAccount;
 import po.model.Customer;
 import po.model.Party;
+import po.model.Product;
 
 public class ModelFactory {
 
@@ -44,5 +45,23 @@ public class ModelFactory {
 		Customer c = CustomerAccount.toCustomer(ModelFactory.createCustomerAccount());
 		// add here some overwrite
 		return c;
+	}
+	
+	public static Product buildIpho(){
+		Product p = new Product();
+		p.setName("ipho");
+		p.setPackageName("ipho");
+		p.setProductCategory("smartphone");
+		p.setPrice(750);
+		return p;
+	}
+	
+	public static Product buildSam(){ 
+		Product p = new Product();
+		p.setName("sam");
+		p.setPackageName("sam");
+		p.setProductCategory("smartphone");
+		p.setPrice(600);
+		return p;
 	}
 }

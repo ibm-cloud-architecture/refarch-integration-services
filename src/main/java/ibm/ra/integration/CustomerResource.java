@@ -109,6 +109,21 @@ public class CustomerResource {
 		}
     }
 
+	@GET
+	@Path(value="/extended/email/{email}")
+	@ApiOperation(value = "Get customer and his/her account and product using the customer's email")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = Customer.class),
+	@ApiResponse(code = 404, message = "Customer not found") })
+	public Response getCustomerExtendedByEmail(@PathParam("email")String email) throws DALException{
+		logger.warning("Get customer:"+email);
+		Customer c = customerDAO.getCustomerByEmail(email);
+		if (c != null) {
+			return Response.ok().entity(c).build();
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+    }
 
 	@PUT
 	@Path("/{id}")

@@ -25,7 +25,6 @@ public class TestLoadingToServerFromCSV  {
 				e.printStackTrace();
 			}
 		}
-	
 	}
 
 }

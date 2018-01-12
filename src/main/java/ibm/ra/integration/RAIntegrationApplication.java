@@ -20,6 +20,7 @@ public class RAIntegrationApplication extends Application {
 		classes.add(CustomerResource.class);
 		classes.add(PurchaseOrderResource.class);
 		classes.add(AccountResource.class);
+		classes.add(ProductResource.class);
 		return classes;
 	}
 	
@@ -29,6 +30,7 @@ public class RAIntegrationApplication extends Application {
 		singletons.add(CustomerResource.class);
 		singletons.add(PurchaseOrderResource.class);
 		singletons.add(AccountResource.class);
+		singletons.add(ProductResource.class);
 		return singletons;
 	}
 

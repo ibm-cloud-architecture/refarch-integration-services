@@ -10,10 +10,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import po.model.Account;
 
 @Path("/accounts")
+@Api("Account management micro service API")
 public class AccountResource {
 	 Logger logger = Logger.getLogger(AccountResource.class.getName());
 	 AccountDAO  accountDAO;

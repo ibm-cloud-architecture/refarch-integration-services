@@ -1,9 +1,13 @@
-# Set of RESTful services to manage customer and purchase order
-This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics).
+# Customer Management RESTful micro service
+This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution describes in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics)
 
-Updated 12/15/2017.
+Updated 1/10/2018.
 
 The goal of this project is to implement a set of RESTful services to manage customer and purchase order.
+
+## Target audience
+* Architects who want to understand the components involved and the architecture constraints and design considerations
+* Developers who want to get starting code, and educate themselves on the related technologies
 
 ## Table of Contents
 * [Code explanation](#code-explanation)
@@ -131,8 +135,6 @@ public Collection<Customer> getCustomers() throws DALException {
   return results;
 }
 ```
-### Unit testing
-Unit test the DAO with the code under `src/test` package `dao.jpa`.
 
 ### Connect the dots
 
@@ -140,39 +142,48 @@ In the resource class delegates calls to the DAO. Implement any business logic i
 
 
 ### API definition
-With Liberty it is possible to visualize the API definition for a deployed JAXRS resource. The product documentation is here, but to summarize we did two things:
+With Liberty it is possible to visualize the API definition for a deployed JAXRS resource. The product documentation is [here](), but to summarize we did two things:
 * define a yaml file for the swagger and save it to webapp/META-INF/stub folder.
 * modify the server.xml to add api discovery feature.
+```
+        <feature>apiDiscovery-1.0</feature>
+```
 
-Once the service is deployed using the URL http://localhost:9080/api/explorer/#/Customer_management_micro_service_API will display the API as you can see below:
+Once the service is deployed locally or on remote server using the URL http://localhost:9080/api/explorer/#/Customer_management_micro_service_API will display the API as you can see below:
 
 ![](docs/customer-api.png)
 
 We also developed a `swagger.yaml` file in the folder `src/main/webapp/META-INF/stub` to describe the APIs. This may be helpful for defining an API product in API Connect.
 
 ## Build and Deploy
+
+### DB2 CUSTDB database
+For the DB2 read [this note](docs/DB2Creation.md)
+
+### Micro Service Java Code
 The project was developed with [Eclipse Neon](http://www.eclipse.org/neon) with the following plugins added to the base eclipse:
 * Websphere Developer Tool for Liberty: using the Marketplace and searching WebSphere developer, then use the Eclipse way to install stuff.
 * Gradle eclipse plugin
 
 Install `gradle CLI` on your computer so you can build, unit test and assemble war.  For that see the installation instructions at [gradle](http://gradle.org)
 
-To build the code you can use maven `nvm install` or gradle: `./gradlew build`. The script should compile, unit tests and build a war under `build/libs` folder.
+To build the code you can use maven `nvm install` or gradle: `./gradlew build`. The `build.gradle` script should compile, unit tests and build a war under `build/libs` folder.
 
-Then use the `docker build -t ibmcase/customerms .` command to build a docker image including WebSphere liberty, the server configuration, and the war file deployed.
+### Dockerize
+Then use the `docker build -t ibmcase/customerms .` command to build a docker image which includes WebSphere liberty, the server configuration, and the war file pre deployed in the app folder.
 
-You can test locally using `docker run -p 9080:9080 ibmcase/customerms` and then points your webbrowser to `http://localhost:9080/caseserv/index.html`. If the front end page is loaded your configuration works!.
+You can test locally using `docker run -p 9080:9080 ibmcase/customerms` and then points your web browser to `http://localhost:9080/caseserv/index.html`. If the front end page is loaded your configuration works!.
 
-We also added some integration test under the package `ibm.caseserv.itests` folder.
+We also added some integration tests under the package `ibm.caseserv.itests` folder.
 
 ## IBM Cloud Private deployment
 We are following the same approach as the other micro service deployment we do at http://github.com/ibm-cloud-architecture, for example the [Case web app](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) or the [Data Access layer](https://github.com/ibm-cloud-architecture/refarch-integration-inventory-dal/blob/master/docs/icp/README.md) projects.
-* dockerize the application with Liberty: a Dockerfile is delivered as part of this project
+* dockerize the application with Liberty: a Dockerfile is delivered as part of this project. See previous section.
 * Tag the docker images with the name of the remote docker repository, the target namespace and the name and version of the image. For example: `greencluster.icp:8500/greencompute/customerms:v0.0.1`
 * docker login to remote repo: `docker login greencluster.icp:8500`
 * docker push the newly created image to the remote repository: `docker push greencluster.icp:8500/greencompute/customerms:v0.0.1`
 * define helm charts with deployment configuration: the chart definition is under chart/green-customerms
-* use `kubectl`  and `helm` CLI to deploy the helm chart and work on the deployed pod.
+* use `kubectl` to access the remote Kubernetes cluster and `helm` CLI to deploy the helm chart and work on the deployed pod.
 
 ## Test Driven Development
 ### Validating DAO / JPA
@@ -194,9 +205,9 @@ When running the test in Eclipse be sure to add to the vm arg of each test, the 
 
 ![](docs/jpa-enhance-ut.png)
 
-Also as we are using a dedicated `persistence.xml` to use derby for unit testing, it is important to modify the classpath of the `run configuration` and reference the test resource folder: select the user entries, then Advanced button, select add folder, and select test `src/test/resources` folder:  
+Also as we are using a dedicated `persistence.xml` to use derby for unit testing, it is important to modify the classpath of the `run configuration` and reference the test resource folder: select the `User Entries`, then `Advanced` button, select `Add folders`, and select test `src/test/resources` folder, then finally be sure it is above the default classpath, using `Up` to order it.  
 
 ![](docs/cp-ut-jpa.png)
 
 ### Populating Customer database
-When connected to the test or staging platform it is recommended to use our data sets to prepare data for the machine learning / analytics future work. The folder dataset has 3 csv files. The customer.csv has 10 records, it should be used to validate the deployment, and everything works fine.
+When connected to the test or staging platform it is recommended to use our data sets to prepare data for the machine learning / analytics future work. The folder dataset has 2 csv files. The customer.csv has 10 records, it should be used to validate the deployment, and everything works fine. The customer_churn.csv has all the remaining records.
