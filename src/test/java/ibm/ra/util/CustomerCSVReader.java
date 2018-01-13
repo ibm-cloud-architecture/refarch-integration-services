@@ -1,6 +1,8 @@
  package ibm.ra.util;
 
 import java.io.BufferedReader;
+
+import java.util.Random;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,6 +72,10 @@ public class CustomerCSVReader {
     	return cl;
     }
     
+    private static String[] mstatus= new String[]{"Single","Married","Widowed","Familly"};
+    private static String[] zipcodes= new String[]{"95051","94000","93000","92100","87430","43000"};
+    static Random rand = new Random();
+    
     private  CustomerAccount createCustomer(String[] attributes){
     	CustomerAccount ca = new CustomerAccount();
     	ca.setId(Long.decode(attributes[0]));
@@ -85,7 +91,17 @@ public class CustomerCSVReader {
     	ca.setEstimatedIncome(Double.parseDouble(attributes[4]));
     	ca.setCarOwner(attributes[5]);
     	ca.setAge(Double.parseDouble(attributes[6]));
+    	
+    	if (attributes[7] == null || attributes[7].isEmpty()){
+    		int  n = rand.nextInt(mstatus.length) ;
+    		attributes[7]=mstatus[n];
+    	}
     	ca.setMaritalStatus(attributes[7]);
+    	
+    	if (attributes[8] == null || attributes[8].isEmpty()){
+    		int  n = rand.nextInt(zipcodes.length) ;
+    		attributes[8]=zipcodes[n];
+    	}
     	ca.setZipcode(attributes[8]);
     	ca.setAccountNumber("ACCT_"+ca.getId());
     	ca.setLongDistance(Double.parseDouble(attributes[9]));
