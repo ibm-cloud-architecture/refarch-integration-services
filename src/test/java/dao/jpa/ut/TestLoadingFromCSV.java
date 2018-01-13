@@ -11,15 +11,33 @@ import org.junit.Test;
 
 import ibm.ra.integration.CustomerDAOImpl;
 import ibm.ra.integration.DALException;
+import ibm.ra.integration.ProductDAO;
+import ibm.ra.integration.ProductDAOImpl;
 import ibm.ra.util.CustomerCSVReader;
 import po.dto.model.CustomerAccount;
+import po.dto.model.ProductDTO;
 import po.model.Customer;
+import po.model.Product;
 
 public class TestLoadingFromCSV extends BaseTest {
-		
+	public static ProductDAO daoP;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		dao= new CustomerDAOImpl();
+		// need to prepopulate product table 
+		daoP= new ProductDAOImpl();
+		
+		try {
+			Product p=ModelFactory.buildIpho();
+			daoP.saveProduct(p);
+			p=ModelFactory.buildSam();
+			daoP.saveProduct(p);
+			p=ModelFactory.buildMoto();
+			daoP.saveProduct(p);
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -28,13 +46,19 @@ public class TestLoadingFromCSV extends BaseTest {
 		CustomerCSVReader tool= new CustomerCSVReader();
 		List<CustomerAccount> cl = tool.readCustomersFromCSV("./dataset/customer.csv");
 		for (CustomerAccount ca : cl) {
-			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber());
-			dao.saveCustomer(ca.toCustomer(ca));
+			Customer c=ca.toCustomer();
+			c.setOwnedProducts(null);
+			ProductDTO pdo=ca.getDevicesOwned().get(0);
+			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber()+ " device "+pdo.getProductName());
+			
+			Product pho=daoP.getProductByName(pdo.getProductName());
+			c.addProduct(pho,pdo.getPhoneNumber());
+			dao.saveCustomer(c);
 		}
 		Customer cOut3= dao.getCustomerById(11);
 		Assert.assertNotNull(cOut3);
 		Assert.assertNotNull(cOut3.getAccount());
-		Assert.assertTrue("sam".equals(cOut3.getAccount().getDeviceOwned()));
+		Assert.assertTrue("sam".equals(cOut3.getOwnedProducts().get(0).getProduct().getName()));
 	}
 
 }

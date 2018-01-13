@@ -24,7 +24,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import po.dto.model.CustomerAccount;
+import po.dto.model.ProductDTO;
 import po.model.Customer;
+import po.model.Product;
 
 
 @Path("/customers")
@@ -33,19 +35,21 @@ public class CustomerResource {
 	 Logger logger = Logger.getLogger(CustomerResource.class.getName());
 	 CustomerDAO customerDAO;
 	 AccountDAO  accountDAO;
+	 ProductDAO productDAO;
 
 	 public CustomerResource(){
 		 customerDAO= new CustomerDAOImpl();
 		 accountDAO = new AccountDAOImpl();
+		 productDAO = new ProductDAOImpl();
 	 }
 	 
 	@GET
 	@Path("/version")
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiOperation("Get version of the API")
-	@ApiResponses({ @ApiResponse(code = 200, message = "version 1.0.0 12/15", response = String.class) })
+	@ApiResponses({ @ApiResponse(code = 200, message = "version v0.0.5", response = String.class) })
 	public Response getVersion(){
-		return Response.ok().entity(new String("version 1.0.0")).build();
+		return Response.ok().entity(new String("version v0.0.5")).build();
 	}
 	
 	@POST
@@ -56,7 +60,12 @@ public class CustomerResource {
 	public Response newCustomer(@ApiParam(required = true) CustomerAccount ca) throws DALException {
 		logger.log(Level.INFO,ca.getLastName()+" received in customer resource");
 		//p.setCreationDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		Customer c = CustomerAccount.toCustomer(ca);
+		Customer c = ca.toCustomer();
+		for (ProductDTO pdto : ca.getDevicesOwned()) {
+			Product pho=productDAO.getProductByName(pdto.getProductName());
+			c.addProduct(pho,pdto.getPhoneNumber());
+		}
+		
 		c.setCreationDate(new Date());
 		c.setUpdateDate(c.getCreationDate());
 		c.setStatus("New");
@@ -109,21 +118,6 @@ public class CustomerResource {
 		}
     }
 
-	@GET
-	@Path(value="/extended/email/{email}")
-	@ApiOperation(value = "Get customer and his/her account and product using the customer's email")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = Customer.class),
-	@ApiResponse(code = 404, message = "Customer not found") })
-	public Response getCustomerExtendedByEmail(@PathParam("email")String email) throws DALException{
-		logger.warning("Get customer:"+email);
-		Customer c = customerDAO.getCustomerByEmail(email);
-		if (c != null) {
-			return Response.ok().entity(c).build();
-		} else {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-    }
 
 	@PUT
 	@Path("/{id}")
@@ -137,7 +131,7 @@ public class CustomerResource {
 		if (c == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		} else {
-			c = CustomerAccount.toCustomer(ca);
+			c = ca.toCustomer();
 			c.setUpdateDate(new Date());
 			customerDAO.updateCustomer(c);
 			return Response.ok().build();

@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -38,6 +39,7 @@ public class Customer extends Party{
 	protected String maritalStatus;
 	protected String mostDominantTone;
 	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name="ACCOUNT_ACCOUNTNUMBER")
 	protected Account account;
 	// Customer owns 1 to many devices / products
 	@OneToMany(mappedBy="customer",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
@@ -197,7 +199,9 @@ public class Customer extends Party{
 		pa.setPhoneNumber(pNumber);
 		pa.setCustomerId(this.getId());
 		pa.setProductName(p.getName());
-		getOwnedProducts().add(pa);
+		if (!getOwnedProducts().contains(pa)) {
+			getOwnedProducts().add(pa);
+		}
 		//p.getOwners().add(pa);
 	}
 

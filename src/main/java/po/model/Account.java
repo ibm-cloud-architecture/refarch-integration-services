@@ -35,10 +35,9 @@ public class Account {
 	@Column(nullable=true, length=30)
 	protected String ratePlan;
 	protected double usage;
-	protected String deviceOwned;
 	protected Date creationDate;
 	protected Date updateDate;
-	@OneToOne(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY,mappedBy="account")
 	protected Customer customer;
 	
 	public Account(){}
@@ -140,13 +139,6 @@ public class Account {
 		this.usage = usage;
 	}
 
-	public String getDeviceOwned() {
-		return deviceOwned;
-	}
-
-	public void setDeviceOwned(String deviceOwned) {
-		this.deviceOwned = deviceOwned;
-	}
 
 	public Date getCreationDate() {
 		return creationDate;

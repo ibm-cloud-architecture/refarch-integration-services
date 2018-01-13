@@ -2,6 +2,7 @@ package ibm.ra.integration;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,11 @@ public class CustomerDAOImpl extends BaseDao implements CustomerDAO {
 
 	@Override
 	public Customer saveCustomer(Customer c) throws DALException {
+		c.setCreationDate(new Date());
+		c.setUpdateDate(c.getCreationDate());
+		c.getAccount().setCreationDate(c.getCreationDate());
+		c.getAccount().setUpdateDate(c.getCreationDate());
+		c.getAccount().setCustomer(c);
 		return (Customer)save(c);
 	}
 
@@ -32,6 +38,7 @@ public class CustomerDAOImpl extends BaseDao implements CustomerDAO {
 
 	@Override
 	public Customer updateCustomer(Customer c) throws DALException {
+		c.setUpdateDate(new Date());
 		return (Customer)merge(c);
 	}
 

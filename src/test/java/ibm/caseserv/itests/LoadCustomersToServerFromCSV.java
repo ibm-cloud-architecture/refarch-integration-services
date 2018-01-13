@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import ibm.ra.integration.DALException;
 import ibm.ra.util.CustomerCSVReader;
+import ibm.ra.util.CustomerRestClient;
 import po.dto.model.CustomerAccount;
 
-public class TestLoadingToServerFromCSV  {
+public class LoadCustomersToServerFromCSV  {
 		
 	
 	@Test

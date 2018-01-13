@@ -1,7 +1,7 @@
 # Customer Management RESTful micro service
 This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution describes in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics)
 
-Updated 1/10/2018.
+Updated 1/12/2018.
 
 The goal of this project is to implement a set of RESTful services to manage customer and purchase order.
 
@@ -158,7 +158,7 @@ We also developed a `swagger.yaml` file in the folder `src/main/webapp/META-INF/
 ## Build and Deploy
 
 ### DB2 CUSTDB database
-For the DB2 read [this note](docs/DB2Creation.md)
+For the DB2 see [this note](docs/DB2Creation.md)
 
 ### Micro Service Java Code
 The project was developed with [Eclipse Neon](http://www.eclipse.org/neon) with the following plugins added to the base eclipse:
@@ -168,6 +168,11 @@ The project was developed with [Eclipse Neon](http://www.eclipse.org/neon) with 
 Install `gradle CLI` on your computer so you can build, unit test and assemble war.  For that see the installation instructions at [gradle](http://gradle.org)
 
 To build the code you can use maven `nvm install` or gradle: `./gradlew build`. The `build.gradle` script should compile, unit tests and build a war under `build/libs` folder.
+
+We have developed a simple script to do all the operations and update the version number for helm charts and docker tag. The command takes a unique argument: the version number. If no number is provided it uses the one in the `values.yaml`.
+```
+$ ./build.sh 0.0.6
+```
 
 ### Dockerize
 Then use the `docker build -t ibmcase/customerms .` command to build a docker image which includes WebSphere liberty, the server configuration, and the war file pre deployed in the app folder.
@@ -184,7 +189,12 @@ We are following the same approach as the other micro service deployment we do a
 * docker push the newly created image to the remote repository: `docker push greencluster.icp:8500/greencompute/customerms:v0.0.1`
 * define helm charts with deployment configuration: the chart definition is under chart/green-customerms
 * use `kubectl` to access the remote Kubernetes cluster and `helm` CLI to deploy the helm chart and work on the deployed pod.
-
+```
+$ helm list
+$ helm del --purge green-customerms
+# under the chart folder
+$ helm install green-customerms/ --name green-customerms --namespace green-compute
+```
 ## Test Driven Development
 ### Validating DAO / JPA
 To implement the DAO we start by specifying the DAO interface  and then implemented the unit tests or each method, before coding the JPA code. The junit tests are in the package `dao.jpa.ut` under the folder `src/test/java`.
@@ -210,4 +220,20 @@ Also as we are using a dedicated `persistence.xml` to use derby for unit testing
 ![](docs/cp-ut-jpa.png)
 
 ### Populating Customer database
-When connected to the test or staging platform it is recommended to use our data sets to prepare data for the machine learning / analytics future work. The folder dataset has 2 csv files. The customer.csv has 10 records, it should be used to validate the deployment, and everything works fine. The customer_churn.csv has all the remaining records.
+When connected to the test or staging platform it is recommended to use our data sets to prepare data for the machine learning / analytics future work and to demonstrate the application. The folder `dataset` has 2 csv files. The customer.csv has 10 records, it should be used to validate the deployment, and everything works fine. The customer_churn.csv has all the remaining records.
+
+For the other use case validation we have two java programs to be executed in this order:
+* AddProductsToBackend: create basic products to be use as smartphone
+* AddNeededCustomersToBackend: add Eddie and Bob for demonstration purpose.
+
+You need to have direct access to the Database server and run the service in docker with the command:
+```
+$ docker run -p 9080:9080 ibmcase/customerms
+```
+Accessing the following the following URL should give you the created user data:
+On your localhost:
+http://localhost:9080/caseserv/api/v1/customers/1
+or
+http://localhost:9080/caseserv/api/v1/customers/email/bobbuilder@email.com
+
+The web app of [this repository](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) is the front end to access those data too.

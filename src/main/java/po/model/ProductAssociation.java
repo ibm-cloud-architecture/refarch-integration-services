@@ -17,6 +17,7 @@ public class ProductAssociation {
 	@Id
 	@Column(nullable=false, length=20)
 	protected String productName;
+	@Column(length=20)
 	protected String phoneNumber;
 	
 	@ManyToOne

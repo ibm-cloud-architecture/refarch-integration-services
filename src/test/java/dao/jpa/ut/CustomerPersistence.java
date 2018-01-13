@@ -6,7 +6,9 @@ import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import ibm.ra.integration.CustomerDAOImpl;
 import ibm.ra.integration.DALException;
@@ -17,6 +19,7 @@ import po.model.Customer;
  * @author jeromeboyer
  *
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerPersistence extends BaseTest{
 	
 	@BeforeClass
@@ -35,7 +38,7 @@ public class CustomerPersistence extends BaseTest{
 			Assert.assertNotNull(cOut.getId());
 			System.out.println("Customer has ID:"+cOut.getId());
 			Assert.assertTrue(c.getName().equals(cOut.getName()));
-			
+			System.out.println(cOut.getCreationDate().toString());
 			System.out.println("getCustomerByName ...");
 			Customer cOut2= dao.getCustomerByName(c.getName());
 			Assert.assertNotNull(cOut2);
@@ -49,6 +52,13 @@ public class CustomerPersistence extends BaseTest{
 			Assert.assertNotNull(cOut3.getAccount());
 			Assert.assertTrue("act001".equals(cOut3.getAccount().getAccountNumber()));
 			
+			System.out.println("getCustomerByEmail ...");
+			cOut3= dao.getCustomerByEmail("bp@supersite.com");
+			Assert.assertNotNull(cOut3);
+			System.out.println("Customer has ID:"+cOut3.getId());
+			Assert.assertNotNull(cOut3.getAccount());
+			Assert.assertTrue("act001".equals(cOut3.getAccount().getAccountNumber()));
+			
 		} catch (DALException e) {
 			e.printStackTrace();
 			fail("Exception in test");
@@ -56,7 +66,7 @@ public class CustomerPersistence extends BaseTest{
 	}
 	
 	@Test
-	public void addDelete(){
+	public void testxAddDelete(){
 		System.out.println("Create customer in DB");
 		Customer c = ModelFactory.createCustomer();
 		c.setId(new Long(2));
@@ -75,7 +85,7 @@ public class CustomerPersistence extends BaseTest{
 		}	
 	}
 	
-	@Test
+   @Test
 	public void testGetMoreCustomers(){
 		Customer c = ModelFactory.createCustomer();
 		c.setName("Test2");
@@ -84,11 +94,13 @@ public class CustomerPersistence extends BaseTest{
 		try {
 			Customer cOut=dao.saveCustomer(c);
 			Assert.assertNotNull(cOut);
+			
 			c = ModelFactory.createCustomer();
 			c.setName("Test3");
 			c.setId(new Long(4));
 			c.getAccount().setAccountNumber("act004");
 			cOut=dao.saveCustomer(c);
+			
 			Collection<Customer>l=dao.getCustomers();
 			Assert.assertTrue(l.size()>1);
 		} catch (DALException e) {

@@ -1,4 +1,4 @@
-package ibm.caseserv.itests;
+package ibm.ra.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +18,8 @@ import org.apache.http.impl.client.HttpClients;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ibm.ra.util.RestClient;
 import po.dto.model.CustomerAccount;
+import po.dto.model.ProductDTO;
 
 
 
@@ -96,6 +96,10 @@ public class CustomerRestClient extends RestClient {
 		return executePostMethodAsJson(url,s);
 	}
 	
+	public String executeProductPost(String url,ProductDTO c) throws Exception {
+		String s= parser.toJson(c);
+		return executePostMethodAsJson(url,s);
+	}
 	
 	
 	public String executePutMethodAsJson(String url,String json) throws Exception {
@@ -109,6 +113,14 @@ public class CustomerRestClient extends RestClient {
 	public String executeCustomerPut(String url,CustomerAccount c) throws Exception {
 		String s= parser.toJson(c);
 		return executePutMethodAsJson(url,s);
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public  Gson getParser() {
+		return parser;
 	}
 	
 }

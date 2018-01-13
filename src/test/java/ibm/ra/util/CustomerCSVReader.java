@@ -1,4 +1,4 @@
-package ibm.ra.util;
+ package ibm.ra.util;
 
 import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import ibm.caseserv.itests.CustomerRestClient;
 import po.dto.model.CustomerAccount;
+import po.dto.model.ProductDTO;
 
 public class CustomerCSVReader {
     
@@ -70,34 +70,43 @@ public class CustomerCSVReader {
     	return cl;
     }
     
-    public  CustomerAccount createCustomer(String[] attributes){
-    	CustomerAccount c = new CustomerAccount();
-    	c.setId(Long.decode(attributes[0]));
-    	c.setName("NameOf_"+attributes[0]);
-    	c.setLastName(c.getName());
-    	c.setFirstName("firstName_"+attributes[0]);
-    	c.setEmailAddress(c.getLastName()+"."+c.getFirstName()+"@supermail");
-    	c.setType("Person");
-    	c.setGender(attributes[1]);
-    	c.setStatus(attributes[2]);
-    	c.setChildren(Integer.parseInt(attributes[3]));
-    	c.setEstimatedIncome(Double.parseDouble(attributes[4]));
-    	c.setCarOwner(attributes[5]);
-    	c.setAge(Double.parseDouble(attributes[6]));
-    	c.setMaritalStatus(attributes[7]);
-    	c.setZipcode(attributes[8]);
-    	c.setAccountNumber("ACCT_"+c.getId());
-    	c.setLongDistance(Double.parseDouble(attributes[9]));
-    	c.setInternational(Double.parseDouble(attributes[10]));
-    	c.setLocal(Double.parseDouble(attributes[11]));
-        c.setDropped(Integer.parseInt(attributes[12]));
-        c.setPaymentMethod(attributes[13]);
-        c.setLocalBillType(attributes[14]);
-        c.setLongDistanceBillType(attributes[15]);
-        c.setUsage(Double.parseDouble(attributes[16]));
-        c.setRatePlan(attributes[17]);
-        c.setDeviceOwned(attributes[18]);
-        c.setChurn(attributes[19]);
-    	return c;
+    private  CustomerAccount createCustomer(String[] attributes){
+    	CustomerAccount ca = new CustomerAccount();
+    	ca.setId(Long.decode(attributes[0]));
+    	ca.setLastName("Name_"+attributes[0]);
+    	ca.setName(ca.getLastName());
+    	ca.setFirstName("firstName_"+attributes[0]);
+    	ca.setName(ca.getLastName()+" "+ca.getFirstName());
+    	ca.setEmailAddress(ca.getLastName()+"@email.com");
+    	ca.setType("Person");
+    	ca.setGender(attributes[1]);
+    	ca.setStatus(attributes[2]);
+    	ca.setChildren(Integer.parseInt(attributes[3]));
+    	ca.setEstimatedIncome(Double.parseDouble(attributes[4]));
+    	ca.setCarOwner(attributes[5]);
+    	ca.setAge(Double.parseDouble(attributes[6]));
+    	ca.setMaritalStatus(attributes[7]);
+    	ca.setZipcode(attributes[8]);
+    	ca.setAccountNumber("ACCT_"+ca.getId());
+    	ca.setLongDistance(Double.parseDouble(attributes[9]));
+    	ca.setInternational(Double.parseDouble(attributes[10]));
+    	ca.setLocal(Double.parseDouble(attributes[11]));
+        ca.setDropped(Integer.parseInt(attributes[12]));
+        ca.setPaymentMethod(attributes[13]);
+        ca.setLocalBillType(attributes[14]);
+        ca.setLongDistanceBillType(attributes[15]);
+        ca.setUsage(Double.parseDouble(attributes[16]));
+        ca.setRatePlan(attributes[17]);
+        
+        ProductDTO p = new ProductDTO();
+    	p.setPhoneNumber("650600"+ca.getId().toString());
+        if (attributes[18] != null) {
+        	p.setProductName(attributes[18]);
+        } else {
+        	p.setProductName("sam");
+        }
+        ca.getDevicesOwned().add(p);
+        ca.setChurn(attributes[19]);
+    	return ca;
     }
 }

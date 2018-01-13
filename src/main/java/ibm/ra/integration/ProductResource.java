@@ -1,8 +1,8 @@
 package ibm.ra.integration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
@@ -20,9 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import po.dto.model.CustomerAccount;
-import po.model.Account;
-import po.model.Customer;
+import po.dto.model.ProductDTO;
 import po.model.Product;
 
 @Path("/products")
@@ -42,17 +40,24 @@ public class ProductResource {
 	 @Produces(MediaType.APPLICATION_JSON)
 	 @ApiResponses({ @ApiResponse(code = 200, message = "Product retrieved", response = Product.class),
 	 @ApiResponse(code = 404, message = "Product not found") })
-	 public Product getProductByName(@PathParam("name")String name) throws DALException {	
+	 public ProductDTO getProductByName(@PathParam("name")String name) throws DALException {	
 		logger.info("Get Product By name :"+name);
-		return pDAO.getProductByName(name);
+		Product p =pDAO.getProductByName(name);
+		return ProductDTO.toProductDTO(p);
 	}
 	 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all Products",responseContainer = "array", response = Product.class)
-	public Collection<Product>  getProducts() throws DALException{
+	public Collection<ProductDTO>  getProducts() throws DALException{
 		logger.warning((new Date()).toString()+" Get all Products");
- 		return pDAO.getProducts();
+		Collection<ProductDTO> l = new ArrayList<ProductDTO>();
+		Collection<Product> lo= pDAO.getProducts();
+		for (Product p:lo){
+			ProductDTO pdto=ProductDTO.toProductDTO(p);
+			l.add(pdto);
+		}
+ 		return l;
 	}
 	
 	@POST
@@ -60,8 +65,9 @@ public class ProductResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Create a new product")
 	@ApiResponses({ @ApiResponse(code = 201, message = "Product created", response = String.class) })
-	public Response newProduct(@ApiParam(required = true) Product p) throws DALException {
-		p=pDAO.saveProduct(p);
-		return Response.status(Status.CREATED).entity("{\"name\":" + p.getName() + "}").build();
+	public Response newProduct(@ApiParam(required = true) ProductDTO p) throws DALException {
+		
+		Product po=pDAO.saveProduct(p.toProduct());
+		return Response.status(Status.CREATED).entity("{\"name\":" + po.getName() + "}").build();
 	}
 }

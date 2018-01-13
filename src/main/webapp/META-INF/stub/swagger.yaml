@@ -27,8 +27,16 @@ paths:
             $ref: "#/definitions/customer"
       responses:
         '201':
-          description: "Contact created"
+          description: "Customer created"
       operationId: "postCustomer"
+  /customers/version:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            type: "string"
+      operationId: "getVersion"
   /customers/{id}:
     parameters:
     - name: "id"
@@ -96,6 +104,38 @@ paths:
           schema:
             $ref: "#/definitions/account"
       operationId: "getAccountByNumber"
+  /products:
+       get:
+          responses:
+            '200':
+              description: "200 OK"
+              schema:
+                  $ref: "#/definitions/products"
+          operationId: "getProducts"
+        post:
+          parameters:
+            - name: "product"
+              required: true
+              in: "body"
+              schema:
+                $ref: "#/definitions/product"
+          responses:
+            '201':
+              description: "Product created"
+          operationId: "postCustomer"
+  /products/{name}:
+      parameters:
+      - name: "name"
+        type: "string"
+        required: true
+        in: "path"
+      get:
+        responses:
+          200:
+            description: "200 OK"
+            schema:
+              $ref: "#/definitions/product"
+        operationId: "getProductByName"
 definitions:
   customer:
     properties:
@@ -226,3 +266,23 @@ definitions:
     type: "array"
     items:
       $ref: "#/definitions/account"
+  product:
+    productName:
+      type: "string"
+    packageName:
+      type: "string"
+    categoryName:
+      type: "string"
+    monthlyUsage:
+        type: "integer"
+        format: "double"
+    price:
+        type: "integer"
+        format: "double"
+    downloadSpeed:
+        type: "integer"
+        format: "double"
+    products:
+      type: "array"
+      items:
+        $ref: "#/definitions/product"

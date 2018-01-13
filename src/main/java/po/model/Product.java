@@ -23,8 +23,8 @@ public class Product {
 	protected String packageName;
 	@Column(nullable=true, length=50)
 	protected String productCategory;
-	protected int monthlyUsage;
-	protected int downloadSpeed;
+	protected double monthlyUsage;
+	protected double downloadSpeed;
 	protected double price;
 	@OneToMany(mappedBy="product",cascade=CascadeType.REMOVE)
 	protected List<ProductAssociation> owners;
@@ -60,19 +60,19 @@ public class Product {
 		this.productCategory = productCategory;
 	}
 
-	public int getMonthlyUsage() {
+	public double getMonthlyUsage() {
 		return monthlyUsage;
 	}
 
-	public void setMonthlyUsage(int monthlyUsage) {
+	public void setMonthlyUsage(double monthlyUsage) {
 		this.monthlyUsage = monthlyUsage;
 	}
 
-	public int getDownloadSpeed() {
+	public double getDownloadSpeed() {
 		return downloadSpeed;
 	}
 
-	public void setDownloadSpeed(int downloadSpeed) {
+	public void setDownloadSpeed(double downloadSpeed) {
 		this.downloadSpeed = downloadSpeed;
 	}
 

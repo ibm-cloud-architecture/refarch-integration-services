@@ -73,7 +73,7 @@ public class TestProductDAO extends BaseTest{
 	//@Test
 	public void testXDelete(){
 		try {
-			String cOut=dao.deleteProduct("Sam");
+			String cOut=dao.deleteProduct("sam");
 			Assert.assertNotNull(cOut);
 			Collection<Product> l =dao.getProducts();
 			Assert.assertNotNull(l);

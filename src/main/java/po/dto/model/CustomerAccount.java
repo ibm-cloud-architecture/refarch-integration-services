@@ -1,13 +1,18 @@
 package po.dto.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.swagger.annotations.ApiModelProperty;
 import po.model.Account;
 import po.model.Customer;
-import io.swagger.annotations.ApiModelProperty;
+import po.model.ProductAssociation;
 
 
 
 /**
- * 
+ * Group customer and account as 1 to 1 relationship to one DTO. This could be changed in the future. The goal
+ * is to flatten the model for DTO.
  * @author jeromeboyer
  *
  */
@@ -46,7 +51,7 @@ public class CustomerAccount {
 	protected String paymentMethod;
 	protected String localBillType;
 	protected String ratePlan;
-	protected String deviceOwned;
+	protected List<ProductDTO> devicesOwned;
 	
 	
 	public CustomerAccount(Customer c){
@@ -80,45 +85,54 @@ public class CustomerAccount {
 			this.dropped=c.getAccount().getDropped();
 			this.paymentMethod=c.getAccount().getPaymentMethod();
 			this.ratePlan=c.getAccount().getRatePlan();
-			this.deviceOwned=c.getAccount().getDeviceOwned();
 		}
-		
+		if (c.getOwnedProducts() != null) {
+			this.devicesOwned=new ArrayList<ProductDTO>();
+			for (ProductAssociation pa : c.getOwnedProducts()) {
+				ProductDTO pDTO = ProductDTO.toProductDTO(pa.getProduct(), pa.getPhoneNumber());
+				this.getDevicesOwned().add(pDTO);
+			}
+		}
 	}
 	
-	public static Customer toCustomer(CustomerAccount ca) {
+	public  Customer toCustomer() {
 		Customer c=new Customer();
-		c.setId(ca.getId());
-		c.setName(ca.getName());
-		c.setFirstName(ca.getFirstName());
-		c.setLastName(ca.getLastName());
-		c.setEmailAddress(ca.getEmailAddress());
-		c.setAge(ca.getAge());
-		c.setGender(ca.getGender());
-		c.setType(ca.getType());
-		c.setStatus(ca.getStatus());
-		c.setChildren(ca.getChildren());
-		c.setEstimatedIncome(ca.getEstimatedIncome());
-		c.setCarOwner(ca.isCarOwner());
-		c.setProfession(ca.getProfession());
-		c.setChurn(ca.getChurn());
-		c.setChurnRisk(ca.getChurnRisk());
-		c.setZipCode(ca.getZipcode());
-		c.setMaritalStatus(ca.getMaritalStatus());
-		c.setMostDominantTone(ca.getMostDominantTone());
+		c.setId(this.getId());
+		c.setName(this.getName());
+		c.setFirstName(this.getFirstName());
+		c.setLastName(this.getLastName());
+		c.setEmailAddress(this.getEmailAddress());
+		c.setAge(this.getAge());
+		c.setGender(this.getGender());
+		c.setType(this.getType());
+		c.setStatus(this.getStatus());
+		c.setChildren(this.getChildren());
+		c.setEstimatedIncome(this.getEstimatedIncome());
+		c.setCarOwner(this.isCarOwner());
+		c.setProfession(this.getProfession());
+		c.setChurn(this.getChurn());
+		c.setChurnRisk(this.getChurnRisk());
+		c.setZipCode(this.getZipcode());
+		c.setMaritalStatus(this.getMaritalStatus());
+		c.setMostDominantTone(this.getMostDominantTone());
 		Account a = new Account();
-		a.setAccountNumber(ca.getAccountNumber());
-		a.setLongDistance(ca.getLongDistance());
-		a.setLongDistanceBillType(ca.getLongDistanceBillType());
-		a.setInternational(ca.getInternational());
-		a.setLocal(ca.getLocal());
-		a.setLocalBillType(ca.getLocalBillType());		
-		a.setBalance(ca.getBalance());
-		a.setUsage(ca.getUsage());
-		a.setDropped(ca.getDropped());
-		a.setPaymentMethod(ca.getPaymentMethod());
-		a.setRatePlan(ca.getRatePlan());
-		a.setDeviceOwned(ca.getDeviceOwned());
+		a.setAccountNumber(this.getAccountNumber());
+		a.setLongDistance(this.getLongDistance());
+		a.setLongDistanceBillType(this.getLongDistanceBillType());
+		a.setInternational(this.getInternational());
+		a.setLocal(this.getLocal());
+		a.setLocalBillType(this.getLocalBillType());		
+		a.setBalance(this.getBalance());
+		a.setUsage(this.getUsage());
+		a.setDropped(this.getDropped());
+		a.setPaymentMethod(this.getPaymentMethod());
+		a.setRatePlan(this.getRatePlan());
 		c.setAccount(a);
+		/* This logic should be in the service as the product has to be loaded from back end to make JPA happy
+		for (ProductDTO p: this.getDevicesOwned()){
+			c.addProduct(p.toProduct(), p.getPhoneNumber());
+		}
+		*/
 		return c;
 	}
 	
@@ -347,13 +361,6 @@ public class CustomerAccount {
 		this.zipcode = zipcode;
 	}
 
-	public String getDeviceOwned() {
-		return deviceOwned;
-	}
-
-	public void setDeviceOwned(String deviceOwned) {
-		this.deviceOwned = deviceOwned;
-	}
 
 	public String getMaritalStatus() {
 		return maritalStatus;
@@ -377,6 +384,15 @@ public class CustomerAccount {
 
 	public void setChurnRisk(double churnRisk) {
 		this.churnRisk = churnRisk;
+	}
+
+	public List<ProductDTO> getDevicesOwned() {
+		if (devicesOwned == null) devicesOwned = new ArrayList<ProductDTO>();
+		return devicesOwned;
+	}
+
+	public void setDevicesOwned(List<ProductDTO> devicesOwned) {
+		this.devicesOwned = devicesOwned;
 	}
 
 

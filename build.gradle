@@ -59,8 +59,12 @@ sourceSets {
   main {
     output.classesDir   = 'src/main/webapp/WEB-INF/classes'
   }
+  test {
+    resources {
+      srcDirs = ['src/test/resources']
+    }
+  }
 }
-
 
 
 // See https://github.com/schmutterer/gradle-openjpa
