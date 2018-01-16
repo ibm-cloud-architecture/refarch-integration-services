@@ -287,5 +287,5 @@ definitions:
           format: "double"
       products:
         type: "array"
-        items:
+        items: 
           $ref: "#/definitions/product"
