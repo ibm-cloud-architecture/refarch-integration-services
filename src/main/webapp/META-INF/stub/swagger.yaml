@@ -105,24 +105,24 @@ paths:
             $ref: "#/definitions/account"
       operationId: "getAccountByNumber"
   /products:
-       get:
-          responses:
-            '200':
-              description: "200 OK"
-              schema:
-                  $ref: "#/definitions/products"
-          operationId: "getProducts"
-        post:
-          parameters:
-            - name: "product"
-              required: true
-              in: "body"
-              schema:
-                $ref: "#/definitions/product"
-          responses:
-            '201':
-              description: "Product created"
-          operationId: "postCustomer"
+    get:
+      responses:
+        '200':
+           description: "200 OK"
+           schema:
+             $ref: "#/definitions/products"
+      operationId: "getProducts"
+    post:
+      parameters:
+        - name: "product"
+          required: true
+          in: "body"
+          schema:
+             $ref: "#/definitions/product"
+      responses:
+        '201':
+          description: "Product created"
+      operationId: "postCustomer"
   /products/{name}:
       parameters:
       - name: "name"
@@ -218,8 +218,10 @@ definitions:
         type: "string"
       ratePlan:
         type: "string"
-      deviceOwned:
-        type: "string"
+      devicesOwned:
+        type: "array"
+        items:
+          $ref: "#/definitions/product"
     additionalProperties: false
   customers:
     type: "array"
@@ -267,22 +269,23 @@ definitions:
     items:
       $ref: "#/definitions/account"
   product:
-    productName:
-      type: "string"
-    packageName:
-      type: "string"
-    categoryName:
-      type: "string"
-    monthlyUsage:
-        type: "integer"
-        format: "double"
-    price:
-        type: "integer"
-        format: "double"
-    downloadSpeed:
-        type: "integer"
-        format: "double"
-    products:
-      type: "array"
-      items:
-        $ref: "#/definitions/product"
+    properties:
+      productName:
+        type: "string"
+      packageName:
+        type: "string"
+      categoryName:
+        type: "string"
+      monthlyUsage:
+          type: "integer"
+          format: "double"
+      price:
+          type: "integer"
+          format: "double"
+      downloadSpeed:
+          type: "integer"
+          format: "double"
+      products:
+        type: "array"
+        items:
+          $ref: "#/definitions/product"
