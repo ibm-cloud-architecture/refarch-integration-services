@@ -1,291 +1,294 @@
----
-swagger: "2.0"
+swagger: '2.0'
 info:
-  title: "Customer management micro service api"
-  version: "1.0.0"
+  title: Customer management micro service api
+  version: 1.0.0
 schemes:
-- "http"
+  - http
 consumes:
-- "application/json"
+  - application/json
 produces:
-- "application/json"
+  - application/json
 paths:
   /customers:
     get:
       responses:
         '200':
-          description: "200 OK"
+          description: 200 OK
           schema:
-              $ref: "#/definitions/customers"
-      operationId: "getCustomers"
+            $ref: '#/definitions/customers'
+      operationId: getCustomers
     post:
       parameters:
-        - name: "customer"
+        - name: customer
           required: true
-          in: "body"
+          in: body
           schema:
-            $ref: "#/definitions/customer"
+            $ref: '#/definitions/customer'
       responses:
         '201':
-          description: "Customer created"
-      operationId: "postCustomer"
+          description: Customer created
+      operationId: postCustomer
   /customers/version:
     get:
       responses:
-        200:
-          description: "200 OK"
+        '200':
+          description: 200 OK
           schema:
-            type: "string"
-      operationId: "getVersion"
-  /customers/{id}:
+            type: string
+      operationId: getVersion
+  '/customers/{id}':
     parameters:
-    - name: "id"
-      type: "string"
-      required: true
-      in: "path"
+      - name: id
+        type: string
+        required: true
+        in: path
     get:
       responses:
-        200:
-          description: "200 OK"
+        '200':
+          description: 200 OK
           schema:
-            $ref: "#/definitions/customer"
-      operationId: "getCustomerById"
+            $ref: '#/definitions/customer'
+      operationId: getCustomerById
     put:
       responses:
-        200:
-          description: "200 OK"
+        '200':
+          description: 200 OK
           schema:
-            $ref: "#/definitions/customer"
-      operationId: "putCustomer"
+            $ref: '#/definitions/customer'
+      operationId: putCustomer
       parameters:
-      - name: "customer"
-        required: true
-        in: "body"
-        schema:
-          $ref: "#/definitions/customer"
+        - name: customer
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/customer'
     delete:
       responses:
-        204:
-          description: "204 Entity successfully deleted"
+        '204':
+          description: 204 Entity successfully deleted
           schema:
-            type: "string"
-      operationId: "deleteCustomer"
-  /customers/email/{email}:
+            type: string
+      operationId: deleteCustomer
+  '/customers/email/{email}':
     parameters:
-    - name: "email"
-      type: "string"
-      required: true
-      in: "path"
+      - name: email
+        type: string
+        required: true
+        in: path
     get:
       responses:
-        200:
-          description: "200 OK"
+        '200':
+          description: 200 OK
           schema:
-            $ref: "#/definitions/customer"
-      operationId: "getCustomerByEmail"
+            $ref: '#/definitions/customer'
+      operationId: getCustomerByEmail
   /accounts:
-     get:
-        responses:
-          '200':
-            description: "200 OK"
-            schema:
-                $ref: "#/definitions/accounts"
-        operationId: "getAccounts"
-  /accounts/{accountNumber}:
-    parameters:
-    - name: "accountNumber"
-      type: "string"
-      required: true
-      in: "path"
     get:
       responses:
-        200:
-          description: "200 OK"
+        '200':
+          description: 200 OK
           schema:
-            $ref: "#/definitions/account"
-      operationId: "getAccountByNumber"
+            $ref: '#/definitions/accounts'
+      operationId: getAccounts
+  '/accounts/{accountNumber}':
+    parameters:
+      - name: accountNumber
+        type: string
+        required: true
+        in: path
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/account'
+      operationId: getAccountByNumber
   /products:
     get:
       responses:
         '200':
-           description: "200 OK"
-           schema:
-             $ref: "#/definitions/products"
-      operationId: "getProducts"
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/products'
+      operationId: getProducts
     post:
       parameters:
-        - name: "product"
+        - name: product
           required: true
-          in: "body"
+          in: body
           schema:
-             $ref: "#/definitions/product"
+            $ref: '#/definitions/product'
       responses:
         '201':
-          description: "Product created"
-      operationId: "postCustomer"
-  /products/{name}:
-      parameters:
-      - name: "name"
-        type: "string"
+          description: Product created
+      operationId: postProduct
+  '/products/{name}':
+    parameters:
+      - name: name
+        type: string
         required: true
-        in: "path"
-      get:
-        responses:
-          200:
-            description: "200 OK"
-            schema:
-              $ref: "#/definitions/product"
-        operationId: "getProductByName"
+        in: path
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/product'
+      operationId: getProductByName
 definitions:
   customer:
     properties:
       id:
-        type: "integer"
-        description: "unique id"
-        format: "int64"
+        type: integer
+        description: unique id
+        format: int64
       name:
-        type: "string"
-        description: "customer's name"
+        type: string
+        description: customer's name
       firstName:
-        type: "string"
-        description: "customer's first name"
+        type: string
+        description: customer's first name
       lastName:
-        type: "string"
-        description: "customer's last name"
+        type: string
+        description: customer's last name
       emailAddress:
-        type: "string"
-        description: "customer's email address"
+        type: string
+        description: customer's email address
       age:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       gender:
-        type: "string"
-        description: "customer's gender"
+        type: string
+        description: customer's gender
       type:
-        type: "string"
-        description: "customer's classification or type: Person or Organization"
+        type: string
+        description: 'customer''s classification or type: Person or Organization'
       status:
-        type: "string"
-        description: "customer's status: Person or Organization"
+        type: string
+        description: 'customer''s status: Person or Organization'
       children:
-        type: "integer"
-        format: "int32"
-        description: "Number of dependants"
+        type: integer
+        format: int32
+        description: Number of dependants
       estimatedIncome:
-        type: "integer"
-        format: "double"
-        description: "Number of dependants"
+        type: integer
+        format: double
+        description: Number of dependants
       carOwner:
-        type: "boolean"
+        type: boolean
       profession:
-        type: "string"
+        type: string
       churn:
-        type: "string"
+        type: string
       zipcode:
-        type: "string"
+        type: string
       maritalStatus:
-        type: "string"
-        description: "One of: Married, Single"
+        type: string
+        description: 'One of: Married, Single'
       mostDominantTone:
-        type: "string"
-        description: "Derived attribute, output"
+        type: string
+        description: 'Derived attribute, output'
       accountNumber:
-        type: "string"
-        description: "Customer has one account. It is output from backend"
+        type: string
+        description: Customer has one account. It is output from backend
       longDistance:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       longDistanceBillType:
-        type: "string"
+        type: string
       international:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       local:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       balance:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       usage:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       dropped:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       paymentMethod:
-        type: "string"
+        type: string
       localBillType:
-        type: "string"
+        type: string
       ratePlan:
-        type: "string"
+        type: string
       devicesOwned:
-        type: "array"
+        type: array
         items:
-          $ref: "#/definitions/product"
+          $ref: '#/definitions/product'
     additionalProperties: false
   customers:
-    type: "array"
+    type: array
     items:
-      $ref: "#/definitions/customer"
+      $ref: '#/definitions/customer'
   account:
     properties:
       id:
-        type: "integer"
-        description: "unique id"
-        format: "int64"
+        type: integer
+        description: unique id
+        format: int64
       accountNumber:
-        type: "string"
-        description: "account number"
+        type: string
+        description: account number
       balance:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       longDistance:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       longDistanceBillType:
-        type: "string"
+        type: string
       international:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       local:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       usage:
-        type: "integer"
-        format: "double"
+        type: integer
+        format: double
       dropped:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       paymentMethod:
-        type: "string"
+        type: string
       localBillType:
-        type: "string"
+        type: string
       ratePlan:
-        type: "string"
+        type: string
       deviceOwned:
-        type: "string"
+        type: string
   accounts:
-    type: "array"
+    type: array
     items:
-      $ref: "#/definitions/account"
+      $ref: '#/definitions/account'
   product:
     properties:
       productName:
-        type: "string"
+        type: string
       packageName:
-        type: "string"
+        type: string
       categoryName:
-        type: "string"
+        type: string
       monthlyUsage:
-          type: "integer"
-          format: "double"
+        type: integer
+        format: double
       price:
-          type: "integer"
-          format: "double"
+        type: integer
+        format: double
       downloadSpeed:
-          type: "integer"
-          format: "double"
+        type: integer
+        format: double
       products:
-        type: "array"
-        items: 
-          $ref: "#/definitions/product"
+        type: array
+        items:
+          $ref: '#/definitions/product'
+  products:
+    type: array
+    items:
+      $ref: '#/definitions/product'
