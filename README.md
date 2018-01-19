@@ -14,11 +14,14 @@ The goal of this project is to implement a set of RESTful services to manage cus
 * [API definition](#api-definition)
 * [Build and deploy](#build-and-deploy)
 * [Install on ICP](#ibm-cloud-private-deployment)
+* [DB2 Creation](docs/DB2Creation.md)
 * [Test Driven Development](#test-driven-development)
+* [Extract Load Data to Warehouse](docs/db2-to-db2warehouse.md)
 
 
 ## Code Explanation
 This micro services is using JAXRS to expose RESTful APIs for all basic operations on the customer and account entities. There are a lot of articles on how to develop a RESTful application using JAXRS, we will not rewrite everything, but we still want to present the steps we followed, it can be used as a cheat sheet.
+
 ### Customer resource
 Created a Customer resource Java class and add JAXRS annotations to define the URL paths and the swagger documentation:
  ```java
@@ -149,11 +152,13 @@ With Liberty it is possible to visualize the API definition for a deployed JAXRS
         <feature>apiDiscovery-1.0</feature>
 ```
 
-Once the service is deployed locally or on remote server using the URL http://localhost:9080/api/explorer/#/Customer_management_micro_service_API will display the API as you can see below:
+Once the service is deployed locally or on remote server, you can access the swagger by going to the URL http://localhost:9080/api/explorer/#/Customer_management_micro_service_API will display the API as you can see below:
 
 ![](docs/customer-api.png)
 
 We also developed a `swagger.yaml` file in the folder `src/main/webapp/META-INF/stub` to describe the APIs. This may be helpful for defining an API product in API Connect.
+
+As Liberty supports generation of swagger by leveraging annotations in resources classes and the ApiDiscovery feature.
 
 ## Build and Deploy
 
@@ -236,4 +241,4 @@ http://localhost:9080/caseserv/api/v1/customers/1
 or
 http://localhost:9080/caseserv/api/v1/customers/email/bobbuilder@email.com
 
-The web app of [this repository](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) is the front end to access those data too.
+The web app of [this repository](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) is the front end to access those data.

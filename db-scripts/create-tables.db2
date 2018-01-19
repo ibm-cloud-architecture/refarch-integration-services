@@ -4,19 +4,16 @@ CREATE TABLE ACCOUNTS (
   dropped INTEGER, 
   international DECIMAL, 
   local DECIMAL(8,2), 
-  localBillType VARCHAR(10), 
+  localBillType VARCHAR(30), 
   longDistance DECIMAL, 
   longDistanceBillType VARCHAR(50), 
-  paymentMethod VARCHAR(50), 
+  paymentMethod VARCHAR(10), 
   ratePlan VARCHAR(10), 
   usage DECIMAL(8,2),
   creationDate TIMESTAMP, 
   updateDate TIMESTAMP, 
   PRIMARY KEY (accountNumber));
 
-
-CREATE INDEX I_CCOUNTS_CUSTOMER 
-    ON ACCOUNTS (CUSTOMER_ID);
 
 CREATE TABLE CUSTOMERS 
 (id INTEGER NOT NULL, 
@@ -31,7 +28,7 @@ CREATE TABLE CUSTOMERS
  children INTEGER, 
  estimatedIncome DOUBLE, 
  churn VARCHAR(20), 
- churnRisk DOUBLE,
+ churnRisk  DECIMAL(8,2),
  gender VARCHAR(10), 
  maritalStatus  VARCHAR(50), 
  mostDominantTone VARCHAR(50), 
@@ -51,7 +48,7 @@ CREATE TABLE PRODUCTS (
   downloadSpeed INTEGER, 
   monthlyUsage INTEGER, 
   packageName VARCHAR(50), 
-  price DOUBLE, 
+  price  DECIMAL(8,2), 
   productCategory VARCHAR(50), 
   creationDate TIMESTAMP, 
   updateDate TIMESTAMP, 
@@ -64,5 +61,10 @@ CREATE TABLE CUSTOMERS_PRODUCTS (CUSTOMERID BIGINT NOT NULL,
         OWNEDPRODUCTS_NAME VARCHAR(20),
         PRIMARY KEY (CUSTOMERID, productName)) 
 
-  
+ CREATE INDEX I_CSTMCTS_CUSTOMER 
+    ON CUSTOMERS_PRODUCTS (CUSTOMER_ID) 
+ 
+ CREATE INDEX I_CSTMCTS_PRODUCT 
+    ON CUSTOMERS_PRODUCTS (OWNEDPRODUCTS_NAME) 
+    
 COMMIT;
