@@ -1,4 +1,4 @@
 apiVersion: v1
 description: Customer, account and purchase order micro - service for green compute
 name: green-customerms
-version: v0.0.6
+version: v0.0.7

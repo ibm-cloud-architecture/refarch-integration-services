@@ -24,14 +24,23 @@ spec:
           livenessProbe:
             httpGet:
               path: /
+              scheme: HTTP
               port: {{ .Values.service.internalPort }}
+            initialDelaySeconds: 30
+            timeoutSeconds: 25
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
           readinessProbe:
             httpGet:
               path: /
+              scheme: HTTP
               port: {{ .Values.service.internalPort }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}
+      imagePullSecrets:
+        - name: regsecret
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
