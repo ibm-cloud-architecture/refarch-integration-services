@@ -41,7 +41,7 @@ public class TestLoadingFromCSV extends BaseTest {
 	}
 
 
-	@Test
+	//@Test
 	public void testLoadCSV() throws DALException {
 		CustomerCSVReader tool= new CustomerCSVReader();
 		List<CustomerAccount> cl = tool.readCustomersFromCSV("./dataset/customer.csv");

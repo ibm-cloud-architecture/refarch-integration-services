@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 
 public class CustomerPersistenceManager {
 	 Logger logger = Logger.getLogger(CustomerPersistenceManager.class.getName());
-	public String persitenceName="customer";
+	public String persistenceName="customer";
 	
 	// EntityManagerFactory instances are heavy weight objects. 
 	// Each factory might maintain a metadata cache, object state cache, EntityManager pool, connection pool...
@@ -41,7 +41,7 @@ public class CustomerPersistenceManager {
 	}
 	  
 	protected void createEntityManagerFactory() {	    
-	   emf = Persistence.createEntityManagerFactory(persitenceName);
+	   emf = Persistence.createEntityManagerFactory(persistenceName);
 	   if (DEBUG)
 		   logger.info("@@@@ Persistence manager factory started at " + new java.util.Date());
 	}

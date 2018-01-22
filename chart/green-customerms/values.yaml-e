@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   # repository: greencluster.icp:8500/greencompute/customerms
   repository: cspcluster.icp:8500/greencompute/customerms
-  tag: v0.0.8
+  tag: v0.0.7
   pullPolicy: Always
 service:
   name: customermssvc

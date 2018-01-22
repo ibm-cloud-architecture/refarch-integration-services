@@ -1,8 +1,11 @@
 /*
 * Build a new service component
  */
+
+ 
 apply plugin: 'war'
 apply plugin: 'liberty'
+// apply plugin: 'neva.openjpa'
 
 group = 'ibm.case.greencompute.customerms'
 version = '1-0-SNAPSHOT'
@@ -12,11 +15,18 @@ buildscript {
     repositories {
     	mavenLocal()
         mavenCentral()
+        maven {
+      		url "https://plugins.gradle.org/m2/"
+    	}
     }
     dependencies {
  		classpath 'org.apache.openjpa:openjpa:2.4.2'
-        classpath 'at.schmutterer.oss.gradle:gradle-openjpa:0.2.0'
-        classpath 'net.wasdev.wlp.gradle.plugins:liberty-gradle-plugin:2.0'
+ 		
+ 		classpath 'at.schmutterer.oss.gradle:gradle-openjpa:0.2.0'
+ 		/*
+        classpath "gradle.plugin.com.neva.gradle.plugin:openjpa:1.0.1"
+        */
+        classpath 'net.wasdev.wlp.gradle.plugins:liberty-gradle-plugin:2.1'
     }
 }
 
@@ -58,6 +68,9 @@ ext {
 sourceSets {
   main {
     output.classesDir   = 'src/main/webapp/WEB-INF/classes'
+    resources {
+      srcDirs = ['src/main/resources']
+    }
   }
   test {
     resources {
@@ -79,7 +92,6 @@ task processConfig(type: Copy) {
     from('src/main/config') {
         include '**/*'
     }
-
     into 'build/config/main'
 }
 
@@ -107,6 +119,7 @@ war {
   rootSpec.exclude("**/lib/derby.jar")
   rootSpec.exclude("**/classes/**/ut/**")
   rootSpec.exclude("**/classes/**tests/**")
+  rootSpec.exclude("**/test/resources/**")
 }
 
 liberty {
