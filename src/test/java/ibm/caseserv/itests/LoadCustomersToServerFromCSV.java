@@ -15,11 +15,13 @@ public class LoadCustomersToServerFromCSV  {
 	@Test
 	public void testLoadCSV() throws DALException {
 		CustomerCSVReader tool= new CustomerCSVReader();
-		List<CustomerAccount> cl = tool.readCustomersFromCSV("./dataset/customer.csv");
+		List<CustomerAccount> cl = tool.readCustomersFromCSV("./dataset/last_customer_churn.csv");
 		
 		CustomerRestClient client = new CustomerRestClient();
 		for (CustomerAccount ca : cl) {
-			System.out.println("Upload to DB "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber());
+			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber()+ " device "+ca.getDevicesOwned().get(0).getPhoneNumber());
+			
+			
 			try {
 				client.executeCustomerPost("/customers",ca);
 			} catch (Exception e) {

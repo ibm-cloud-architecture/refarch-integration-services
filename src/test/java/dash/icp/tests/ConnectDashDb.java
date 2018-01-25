@@ -33,7 +33,7 @@ public class ConnectDashDb {
 		DBConnection dash = new DBConnection();
 		Connection conn=dash.getConnection();
 		Statement stmt = conn.createStatement();
-		ResultSet rs = stmt.executeQuery("SELECT * FROM CUSTOMERLONG WHERE id = 2300");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM CUSTOMER WHERE id = 2300");
 		while (rs.next()) {
 			Assert.assertTrue("2300".equals(rs.getString("ID")));
 			Assert.assertTrue(18==rs.getInt("AGE"));
