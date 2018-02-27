@@ -9,9 +9,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import po.dto.model.CustomerAccount;
 import po.model.Account;
 
 @Path("/accounts")
@@ -27,10 +32,18 @@ public class AccountResource {
 	 
 	 @GET
 	 @Path(value="/{accountNumber}")
+	 @ApiOperation(value = "Get account by account number")
+	 @ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = CustomerAccount.class),
+	 @ApiResponse(code = 404, message = "Customer not found") })
 	 @Produces(MediaType.APPLICATION_JSON)
-	 public Account getAccountByAccountNumber(@PathParam("accountNumber")String accountNumber) throws DALException {	
+	 public Response getAccountByAccountNumber(@PathParam("accountNumber")String accountNumber) throws DALException {	
 		logger.info("Get Account By AccountNumber:"+accountNumber);
-		return accountDAO.getAccountByAccountNumber(accountNumber);
+		Account a=accountDAO.getAccountByAccountNumber(accountNumber);
+		if ( a != null) {
+			return Response.ok().entity(a).build();
+		} else {
+			 return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 	 
 	@GET

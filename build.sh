@@ -18,5 +18,5 @@ cd chart/green-customerms
 
 sed -i -e s/$prev/$v/g values.yaml
 # Chart has no v as prefix
-oldversion=echo $prev | sed 's/^v\(.*\)/\1/'
+oldversion=$(echo $prev | sed 's/^v\(.*\)/\1/')
 sed -i -e s/$oldversion/$1/g Chart.yaml
