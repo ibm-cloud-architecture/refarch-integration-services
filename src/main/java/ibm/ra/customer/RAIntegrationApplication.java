@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.customer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +11,7 @@ import io.swagger.annotations.Tag;
 
 
 @ApplicationPath("/caseserv")
-@SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAXRS API for customer management micro service")})
+@SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAX-RS API for customer management micro service")})
 public class RAIntegrationApplication extends Application {
 
 	@Override
@@ -24,14 +24,4 @@ public class RAIntegrationApplication extends Application {
 		return classes;
 	}
 	
-	@Override
-	public Set<Object> getSingletons() {
-		Set<Object> singletons = new HashSet<Object>();
-		singletons.add(CustomerResource.class);
-		singletons.add(PurchaseOrderResource.class);
-		singletons.add(AccountResource.class);
-		singletons.add(ProductResource.class);
-		return singletons;
-	}
-
 }

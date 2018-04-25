@@ -10,14 +10,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import ibm.ra.integration.CustomerDAO;
-import ibm.ra.integration.CustomerDAOImpl;
-import ibm.ra.integration.DALException;
-import ibm.ra.integration.ProductDAO;
-import ibm.ra.integration.ProductDAOImpl;
-import po.model.Customer;
+import ibm.ra.customer.DALException;
+import ibm.ra.integration.dao.ProductDAO;
+import ibm.ra.integration.dao.ProductDAOImpl;
 import po.model.Product;
-import po.model.ProductAssociation;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestProductDAO extends BaseTest{
@@ -27,50 +23,94 @@ public class TestProductDAO extends BaseTest{
 		dao= new ProductDAOImpl();
 	}
 	
-	
 	@Test
-	public void testCreateCustomerWithProduct(){
-		// products are in DB
+	public void testCreateProduct() {
 		Product p=ModelFactory.buildIpho();
 		try {
-			Product cOut=dao.saveProduct(p);
+			Product cOut = dao.saveProduct(p);
 			Assert.assertNotNull(cOut);
 			Assert.assertTrue(p.getName().equals(cOut.getName()));
-			p=ModelFactory.buildSam();
-			dao.saveProduct(p);
-			// two products in catalog
-			Collection<Product> l =dao.getProducts();
-			Assert.assertNotNull(l);
-			Assert.assertTrue(l.size()==2);
 		} catch (DALException e) {
 			e.printStackTrace();
 			fail("Exception in test");
 		}
-
-		// now a customer is added referencing the two products
-		Customer c = ModelFactory.createCustomer();
-
-		CustomerDAO cdao = new CustomerDAOImpl();
-
+	}
+	
+	@Test
+	public void testGetProductByName() {
+		Product p = ModelFactory.buildSam();
 		try {
-			Product ipho=dao.getProductByName("ipho");
-			c.addProduct(ipho,"650650650");
-			Product sam=dao.getProductByName("sam");
-			c.addProduct(sam,"650650651");
-			cdao.saveCustomer(c);
-			Customer cOut = cdao.getCustomerByEmail(c.getEmailAddress());
+			dao.saveProduct(p);
+			Product cOut = dao.getProductByName(p.getName());
 			Assert.assertNotNull(cOut);
-			for (ProductAssociation pa:cOut.getOwnedProducts()){
-				System.out.println(pa.getProductName());
-			}
+			Assert.assertTrue(p.getName().equals(cOut.getName()));
 		} catch (DALException e) {
 			e.printStackTrace();
+			fail("Exception in test");
 		}
-		
+	}
+	
+	@Test
+	public void testGetProducts() {
+		try {
+			Collection<Product> l = dao.getProducts();
+			Assert.assertNotNull(l);
+			Assert.assertTrue(l.size() > 1);
+		} catch (DALException e) {
+			e.printStackTrace();
+			fail("Exception in test");
+		}
+	}
+	
+	@Test
+	public void testGetProductsByCategory() {
+		try {
+			Collection<Product> l = dao.getProductsByCategory("smartphone");
+			Assert.assertNotNull(l);
+			Assert.assertTrue(l.size() > 1);
+		} catch (DALException e) {
+			e.printStackTrace();
+			fail("Exception in test");
+		}
+	}
+	
+	@Test
+	public void testGetProductsByEmptyCategoryShouldReturnException() {
+		try {
+			dao.getProductsByCategory("");
+		} catch (DALException e) {
+			Assert.assertTrue(e.getFaultInfo().getMessage().contains("Category name is empty"));
+		}
+	}
+	
+	@Test
+	public void testSaveEmptyProductShouldReturnException() {
+		Product p=ModelFactory.buildIpho();
+		p.setName("");
+		try {
+			dao.saveProduct(p);
+		} catch (DALException e) {
+			Assert.assertTrue(e.getFaultInfo().getMessage().contains("Product name is empty"));
+		}
+	}
+	
+	@Test
+	public void testUpdateProduct() {
+		try {
+			Product cOut = dao.getProductByName("sam");
+			Assert.assertNotNull(cOut.getPrice() == 600);
+			cOut.setPrice(550);
+			dao.updateProduct(cOut);
+			Product cOut2 = dao.getProductByName("sam");
+			Assert.assertNotNull(cOut2.getPrice() == 550);
+		} catch (DALException e) {
+			e.printStackTrace();
+			fail("Exception in test");
+		}
 	}
 	
 	
-	//@Test
+	@Test
 	public void testXDelete(){
 		try {
 			String cOut=dao.deleteProduct("sam");

@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,17 +8,21 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ibm.ra.customer.DALException;
+import ibm.ra.customer.DALFault;
 import po.model.Customer;
 
 public class CustomerDAOImpl extends BaseDao implements CustomerDAO {
-
+	
 	@Override
 	public Customer saveCustomer(Customer c) throws DALException {
 		c.setCreationDate(new Date());
 		c.setUpdateDate(c.getCreationDate());
-		c.getAccount().setCreationDate(c.getCreationDate());
-		c.getAccount().setUpdateDate(c.getCreationDate());
-		c.getAccount().setCustomer(c);
+		if (c.getAccount()!= null) {
+			c.getAccount().setCreationDate(c.getCreationDate());
+			c.getAccount().setUpdateDate(c.getCreationDate());
+			c.getAccount().setCustomer(c);
+		}
 		return (Customer)save(c);
 	}
 

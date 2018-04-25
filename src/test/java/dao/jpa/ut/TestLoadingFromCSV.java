@@ -1,18 +1,14 @@
 package dao.jpa.ut;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
-import ibm.ra.integration.CustomerDAOImpl;
-import ibm.ra.integration.DALException;
-import ibm.ra.integration.ProductDAO;
-import ibm.ra.integration.ProductDAOImpl;
+import ibm.ra.customer.DALException;
+import ibm.ra.integration.dao.CustomerDAOImpl;
+import ibm.ra.integration.dao.ProductDAO;
+import ibm.ra.integration.dao.ProductDAOImpl;
 import ibm.ra.util.CustomerCSVReader;
 import po.dto.model.CustomerAccount;
 import po.dto.model.ProductDTO;

@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.customer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,8 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
+import ibm.ra.integration.dao.ProductDAO;
+import ibm.ra.integration.dao.ProductDAOImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -68,6 +69,6 @@ public class ProductResource {
 	public Response newProduct(@ApiParam(required = true) ProductDTO p) throws DALException {
 		
 		Product po=pDAO.saveProduct(p.toProduct());
-		return Response.status(Status.CREATED).entity("{\"name\":" + po.getName() + "}").build();
+		return Response.status(Response.Status.CREATED).build();
 	}
 }

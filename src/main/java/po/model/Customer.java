@@ -42,7 +42,7 @@ public class Customer extends Party{
 	@JoinColumn(name="ACCOUNT_ACCOUNTNUMBER")
 	protected Account account;
 	// Customer owns 1 to many devices / products
-	@OneToMany(mappedBy="customer",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER)
 	protected List<ProductAssociation> ownedProducts;
 	
 	public Customer(){

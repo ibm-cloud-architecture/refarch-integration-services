@@ -1,10 +1,11 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
+
+import ibm.ra.customer.DALException;
 
 
 public abstract class BaseDao {

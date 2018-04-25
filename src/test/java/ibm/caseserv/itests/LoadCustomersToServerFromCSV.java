@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ibm.ra.integration.DALException;
+import ibm.ra.customer.DALException;
 import ibm.ra.util.CustomerCSVReader;
 import ibm.ra.util.CustomerRestClient;
 import po.dto.model.CustomerAccount;

@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @IdClass(ProductAssociationId.class)
 public class ProductAssociation {
 	@Id
-	protected long   customerId;
+	protected Long   customerId;
 	@Id
 	@Column(nullable=false, length=20)
 	protected String productName;
@@ -26,10 +26,12 @@ public class ProductAssociation {
 	@ManyToOne
 	@PrimaryKeyJoinColumn(name="OWNEDPRODUCTS_NAME", referencedColumnName="NAME")
 	protected Product product;
-	public long getCustomerId() {
+	
+	
+	public Long getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(long customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 	public String getProductName() {

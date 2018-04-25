@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.customer;
 
 import javax.xml.ws.WebFault;
 

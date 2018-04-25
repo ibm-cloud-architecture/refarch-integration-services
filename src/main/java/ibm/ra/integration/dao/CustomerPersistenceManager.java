@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
 import java.util.logging.Logger;
 

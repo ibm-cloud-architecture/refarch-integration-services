@@ -1,5 +1,6 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
+import ibm.ra.customer.DALException;
 import po.model.PurchaseOrder;
 
 public interface PurchaseOrderDAO {

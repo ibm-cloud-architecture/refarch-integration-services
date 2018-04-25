@@ -1,15 +1,16 @@
 # Customer Management RESTful micro service
-This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution describes in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics)
+This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics)
 
-Updated 1/12/2018.
+Updated 4/24/2018.
 
-The goal of this project is to implement a set of RESTful services to manage customer and purchase order.
+The goal of this project is to implement a set of RESTful services to manage customer, account, owned products and purchase order.
 
 ## Target audience
 * Architects who want to understand the components involved and the architecture constraints and design considerations
-* Developers who want to get starting code, and educate themselves on the related technologies
+* Developers who want to get starting code for RESTful app on WebSphere Liberty, and educate themselves on the related technologies:  Data Access Object Pattern, Data Transfer Object pattern, and Java Persistence Management. We are addressing packaging as docker image and define helm chart for IBM Cloud Private and kubernetes cluster deployment
 
 ## Table of Contents
+* [Requirements](#requirements)
 * [Code explanation](#code-explanation)
 * [API definition](#api-definition)
 * [Build and deploy](#build-and-deploy)
@@ -18,9 +19,36 @@ The goal of this project is to implement a set of RESTful services to manage cus
 * [Test Driven Development](#test-driven-development)
 * [Extract Load Data to Warehouse](docs/db2-to-db2warehouse.md)
 
+## Requirements
+The requirements are simple: support the creation, update, read and delete of customers. Customer has one account and own products (telecom products but could be other type).
+The purchase order is not fully implemented yet. It may evolve in future if we want to demonstrate analytics capabilities on product recommendations.
 
 ## Code Explanation
-This micro services is using JAXRS to expose RESTful APIs for all basic operations on the customer and account entities. There are a lot of articles on how to develop a RESTful application using JAXRS, we will not rewrite everything, but we still want to present the steps we followed, it can be used as a cheat sheet.
+This micro service is using JAX-RS to expose RESTful APIs for all basic operations on the customer and account entities. There are a lot of articles on how to develop a RESTful application using JAXRS, we will not rewrite everything, but we still want to present the steps we followed, so they can be used as a cheat sheet.
+
+### Application
+A JAX-RS application has a set of resources defined. Here we have CustomerResource, Account and PurchaseOrder. See the class RAIntegrationApplication:
+```java
+@ApplicationPath("/caseserv")
+@SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAX-RS API for customer management micro service")})
+public class RAIntegrationApplication extends Application {
+
+	@Override
+	public Set<Class<?>> getClasses() {
+		Set<Class<?>> classes = new HashSet<Class<?>>();
+		classes.add(CustomerResource.class);
+		classes.add(PurchaseOrderResource.class);
+		classes.add(AccountResource.class);
+		classes.add(ProductResource.class);
+		return classes;
+	}
+}
+```
+By default JAX-RS instantiates the resource classes per HTTP request. You will use singleton if you need to keep state or your resource is expensive. The JPA entity manager factory is an expensive object, but it is managed by itself as a singleton. So in most use case you do not need to have a Resource as a singleton.
+
+The `@ApplicationPath` is an annotation from JAX-RS to specify the root context of the web application.
+
+The Purchase Order may be externalize to a separate micro service, as only the customer id and product ids are needed during the creation of an order. Even if the data base is the same the logic and ownership of this logic may be different than the customer one.
 
 ### Customer resource
 Created a Customer resource Java class and add JAXRS annotations to define the URL paths and the swagger documentation:
@@ -29,7 +57,7 @@ Created a Customer resource Java class and add JAXRS annotations to define the U
 @Api("Customer management micro service API")
 	public class CustomerResource {
 	   //...
-	  @GET
+	    @GET
 		@Path(value="/{id}")
 		@ApiOperation(value = "Get customer and his/her account with ID")
 		@Produces(MediaType.APPLICATION_JSON)
@@ -47,11 +75,13 @@ Created a Customer resource Java class and add JAXRS annotations to define the U
 	}
   // ... other operations not shown
   ```
+The `@GET, @Path and @PathParam` annotations are from JAX-RS. The `@Api, @ApiOperation, @ApiResponse` are from swagger, for API documentation purpose.
 
-  To automatically generate the swagger file you need the following swagger-annotation jar in your classpath (we deliver one in the lib folder) and use the `@Api, @ApiResponse, @ApiOperation` annotations. When deploying on Liberty server the swagger is autogenerated.
+To automatically generate the swagger file you need the following swagger-annotation jar in your classpath (we deliver one in the lib folder) and use the `@Api, @ApiResponse, @ApiOperation` annotations. When deploying on Liberty server the swagger is autogenerated during the App deployment
 
- The app is packaged and exposed with a web context set to `caseserv`. The web.xml map the URL: `/api/v1/*` to the servlet managing the resources.  Therefore the customer resource will be at the url: `http://hostname:port/caseserv/api/v1/customers`.
- The above annotations exposes the method getCustomerById to a HTTP GET on the above URL with the customer id as suffix. The chosen implementation is to use the Response object to control return code and the payload. We could have returned the Customer data directly too.
+The app is packaged and exposed with a web context set to `caseserv`. The web.xml map the URL: `/api/v1/*` to the servlet managing the resources.  Therefore the customer resource will be at the url: `http://hostname:port/caseserv/api/v1/customers`.
+
+The above annotations exposes the method getCustomerById to a HTTP GET on the above URL with the customer id as suffix. The chosen implementation is to use the Response object to control return code and the payload. We could have returned the Customer data directly too.
 
  Also we are not exposing the Customer object as is: the Customer is a JPA entity mapped to a CUSTOMER table in the database, we want to build a view of the data needed by the consumers of the service. The CustomerAccount is a Data Transfer Object pattern. It may not be the best view but we may refactor it later when requirements will add up.
 
@@ -66,27 +96,6 @@ The entity data model to support is presented in the figure below. It is similar
 
 We also delivered SQL statements and scripts to create the database in DB2. See the folder `db-scripts`.
 
-### JAXRS application
-
-Develop the application definition with the class `RAIntegrationApplication` which declares the exposed resources:
-
-```java
-import javax.ws.rs.core.Application;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
-
-	@ApplicationPath("/caseserv")
-	@SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAXRS API for customer management micro service")})
-	public class RAIntegrationApplication extends Application {
-			@Override
-			public Set<Class<?>> getClasses() {
-				Set<Class<?>> classes = new HashSet<Class<?>>();
-				classes.add(CustomerResource.class);
-        classes.add(AccountResource.class);
-			}
-			// ..
-    }
-  ```
 
 ### Web app descriptors
 Specify the url mapping to the pre-defined servlet serving REST resources in the web.xml:
@@ -110,7 +119,7 @@ Specify the url mapping to the pre-defined servlet serving REST resources in the
 </servlet-mapping>
 ```
 
-### Data Access Objects
+### Data Access Object Classes
 
 Implement the different DAOs to access the database. We are using a pure Java Persistence API implementation. We defined a BaseDAO for generic persistence operations like save, update, delete... Each DAO supports a specific entity and its CRUD operations.
 The following code example illustrates  typical JPA pattern of using predefined query defined at the entity level in the customer class:
@@ -138,11 +147,12 @@ public Collection<Customer> getCustomers() throws DALException {
   return results;
 }
 ```
+The Customer to account is a one to one relationship and an account could not live without a customer so when a new customer is created the account is persisted via the cascade strategy.
+For the customer to owned product the situation is not the same. We want to avoid using the product DAO inside the customer DAO. So the integration will be done in the service level, the CustomerResource class. We will discuss this approach in the [TDD](#test-driven-development) section below.
 
 ### Connect the dots
 
-In the resource class delegates calls to the DAO. Implement any business logic in the service. We did not decouple the API class from the service where the business logic can be done and tested in isolation. It is recommended to do this refactoring in the future.
-
+The resource class delegates calls to the DAO. Implement any business logic in the service. We did not decouple the API class from the service where the business logic can be done and tested in isolation. It may make sense to do this refactoring in the future.
 
 ### API definition
 With Liberty it is possible to visualize the API definition for a deployed JAXRS resource. The product documentation is [here](), but to summarize we did two things:
@@ -160,6 +170,13 @@ We also developed a `swagger.yaml` file in the folder `src/main/webapp/META-INF/
 
 As Liberty supports generation of swagger by leveraging annotations in resources classes and the ApiDiscovery feature.
 
+## Test Driven Development
+As part of our development methodology we are using since 2003, we develop by starting by the tests. So the `src/test/java` folder includes a set of package to unit test each of the application layer: DAO, service.
+
+To unit test the DAO we are using Derby Embedded, which is compatible with DB2, and uses in memory database. So it is very easy to set up data for testing and delete the database at the tests completion. The class BaseTest is defining one `AfterClass` method to delete the DB.
+Each DAO has at least one unit test class implemented using [junit](http://junit.org). 
+
+For the CustomerResource
 ## Build and Deploy
 
 ### DB2 CUSTDB database

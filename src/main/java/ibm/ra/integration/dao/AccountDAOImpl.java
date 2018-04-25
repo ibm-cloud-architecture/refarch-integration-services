@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +7,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ibm.ra.customer.DALException;
+import ibm.ra.customer.DALFault;
 import po.model.Account;
-import po.model.Customer;
 
 public class AccountDAOImpl extends BaseDao  implements AccountDAO {
 

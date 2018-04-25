@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,12 +8,18 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ibm.ra.customer.DALException;
+import ibm.ra.customer.DALFault;
 import po.model.Product;
 
 public class ProductDAOImpl extends BaseDao implements ProductDAO {
 
 	@Override
 	public Product saveProduct(Product p) throws DALException {
+		if (p.getName() == null || p.getName().isEmpty()) {
+			DALFault f = new DALFault("ERRDAO3010","Product name is empty");
+			throw new DALException("DAL exception input data", f);
+		}
 		p.setCreationDate(new Date());
 		p.setUpdateDate(p.getCreationDate());
 		return (Product)save(p);
@@ -42,7 +48,7 @@ public class ProductDAOImpl extends BaseDao implements ProductDAO {
 		EntityManager em = getEntityManager();
 		List<Product> l=null;
 		try{ 
-			Query query =em.createQuery("select p from Product p where p.categoryName = ?1",Product.class);
+			Query query =em.createQuery("select p from Product p where p.productCategory = ?1",Product.class);
 			query.setParameter (1,categoryName);
 			l=query.getResultList();
 		} finally {

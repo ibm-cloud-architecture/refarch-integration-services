@@ -17,7 +17,7 @@ public abstract class Party {
 	@Id
 	@Column( nullable = false)
 	protected Long id=null;
-	@Column(nullable=false, length=100)
+	@Column(nullable=true, length=100)
 	protected String name;
 	@Column(nullable=true, length=10)
 	protected String type;

@@ -1,4 +1,4 @@
-package ibm.ra.integration;
+package ibm.ra.customer;
 
 import java.util.Collection;
 import java.util.Date;
@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import ibm.ra.integration.dao.AccountDAO;
+import ibm.ra.integration.dao.AccountDAOImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

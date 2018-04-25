@@ -7,7 +7,7 @@ public class ProductAssociationId implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -8171306857054901901L;
-	protected long   customerId;
+	protected Long   customerId;
 	protected String productName;
 
 	  public int hashCode() {
@@ -23,11 +23,11 @@ public class ProductAssociationId implements Serializable{
 	    return false;
 	  }
 
-	public long getCustomerId() {
+	public Long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(long customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 

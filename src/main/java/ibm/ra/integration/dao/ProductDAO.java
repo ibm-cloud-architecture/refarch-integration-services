@@ -1,7 +1,8 @@
-package ibm.ra.integration;
+package ibm.ra.integration.dao;
 
 import java.util.Collection;
 
+import ibm.ra.customer.DALException;
 import po.model.Product;
 
 public interface ProductDAO {

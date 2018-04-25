@@ -44,6 +44,7 @@ public class ModelFactory {
 		// use the DTO transformation and one source of bean definition
 		CustomerAccount ca = ModelFactory.createCustomerAccount();
 		Customer c = ca.toCustomer();
+		
 		// add here some overwrite
 		return c;
 	}
