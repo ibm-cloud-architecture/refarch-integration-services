@@ -174,9 +174,9 @@ As Liberty supports generation of swagger by leveraging annotations in resources
 As part of our development methodology we are using since 2003, we develop by starting by the tests. So the `src/test/java` folder includes a set of package to unit test each of the application layer: DAO, service.
 
 To unit test the DAO we are using Derby Embedded, which is compatible with DB2, and uses in memory database. So it is very easy to set up data for testing and delete the database at the tests completion. The class BaseTest is defining one `AfterClass` method to delete the DB.
-Each DAO has at least one unit test class implemented using [junit](http://junit.org). 
+Each DAO has at least one unit test class implemented using [junit](http://junit.org).
 
-For the CustomerResource
+For the CustomerService 
 ## Build and Deploy
 
 ### DB2 CUSTDB database
