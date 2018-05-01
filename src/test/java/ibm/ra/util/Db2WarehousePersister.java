@@ -12,6 +12,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import ibm.caseserv.itests.CustomerRestClient;
 import ibm.ra.customer.CustomerResource;
 import ibm.ra.customer.DALException;
 import po.dto.model.CustomerAccount;

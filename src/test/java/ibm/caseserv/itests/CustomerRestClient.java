@@ -1,4 +1,4 @@
-package ibm.ra.util;
+package ibm.caseserv.itests;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public class CustomerRestClient extends RestClient {
 			props.load(fin);
 		} catch (IOException e) {
 			e.printStackTrace();
-			props.setProperty("customerms.host", "172.16.40.131");
+			props.setProperty("customerms.host", "172.16.40.224");
 		}
 	}
 

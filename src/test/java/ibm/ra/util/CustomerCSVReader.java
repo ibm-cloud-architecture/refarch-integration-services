@@ -3,6 +3,9 @@
 import java.io.BufferedReader;
 
 import java.util.Random;
+
+import ibm.caseserv.itests.CustomerRestClient;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -75,6 +75,18 @@ sourceSets {
       srcDirs = ['src/test/resources']
     }
   }
+  integrationTest {
+     java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+   }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
 }
 
 
@@ -99,15 +111,11 @@ test {
   exclude '**/itests/**'
 }
 
-
+// ensure that integration tests run all the time by specifying output is out of date
 task integrationTest(type: Test) {
-    group 'Verification'
-    description 'Runs the integration tests.'
-    reports.html.destination = file("$buildDir/reports/it")
-    reports.junitXml.destination = file("$buildDir/test-results/it")
-    include '**/itests/**'
-    exclude '**/ut/**'
 
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
     systemProperties = ['liberty.test.port': libertyTestPort]
 }
 
@@ -133,6 +141,11 @@ liberty {
      }
 }
 
+// avoid to fail the build if integration tests fail, as they may be unstable
+check.dependsOn -= integrationTest
+integrationTest.dependsOn libertyStart
+integrationTest.mustRunAfter test
+libertyStart.finalizedBy 'printMessageAboutRunningServer'
 /*
 check.dependsOn 'integrationTest'
 integrationTest.dependsOn 'libertyStart', 'testClasses'

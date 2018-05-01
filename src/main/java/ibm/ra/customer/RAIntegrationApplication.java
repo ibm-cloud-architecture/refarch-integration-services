@@ -9,8 +9,6 @@ import javax.ws.rs.core.Application;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 
-
-@ApplicationPath("/caseserv")
 @SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAX-RS API for customer management micro service")})
 public class RAIntegrationApplication extends Application {
 

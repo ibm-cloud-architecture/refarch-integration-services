@@ -4,18 +4,17 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	<servlet>
 		<description>
 		Main servlet entry point for the REST resource/application</description>
-		<servlet-name>JAX-RS Servlet</servlet-name>
+		<servlet-name>javax.ws.rs.core.Application</servlet-name>
 		<servlet-class>com.ibm.websphere.jaxrs.server.IBMRestServlet</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>ibm.ra.integration.RAIntegrationApplication</param-value>
+			<param-value>ibm.ra.customer.RAIntegrationApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
-		<enabled>true</enabled>
 		<async-supported>false</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>JAX-RS Servlet</servlet-name>
+		<servlet-name>javax.ws.rs.core.Application</servlet-name>
 		<url-pattern>/api/v1/*</url-pattern>
 	</servlet-mapping>
 	<persistence-context-ref>

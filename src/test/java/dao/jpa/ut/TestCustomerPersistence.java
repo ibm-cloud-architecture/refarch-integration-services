@@ -15,6 +15,7 @@ import ibm.ra.integration.dao.CustomerDAOImpl;
 import ibm.ra.integration.dao.ProductDAO;
 import ibm.ra.integration.dao.ProductDAOImpl;
 import po.model.Customer;
+import po.model.Product;
 
 /**
  * Validate CRUD operations on the customer DAO
@@ -31,7 +32,9 @@ public class TestCustomerPersistence extends BaseTest {
 		dao = new CustomerDAOImpl();
 		// add one product to be used by the customer of this test
 		ProductDAO pdao = new ProductDAOImpl();
-		pdao.saveProduct(ModelFactory.buildIpho());
+		Product p = ModelFactory.buildIpho();
+		p.setName("ipho8");
+		pdao.saveProduct(p);
 	}
 
 	@Test

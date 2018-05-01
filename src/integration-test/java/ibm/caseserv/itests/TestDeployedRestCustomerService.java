@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import dao.jpa.ut.ModelFactory;
-import ibm.ra.util.CustomerRestClient;
 import po.dto.model.CustomerAccount;
 import po.dto.model.ProductDTO;
 import po.model.Product;

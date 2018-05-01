@@ -1,4 +1,4 @@
-package ibm.ra.util;
+package ibm.caseserv.itests;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
