@@ -1,33 +1,37 @@
-# Customer Management RESTful micro service
-This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics)
+# Customer Management micro service
+This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) and hybrid cloud integration [solution]((https://github.com/ibm-cloud-architecture/refarch-integration).
 
-Updated 4/24/2018.
+Updated 5/03/2018.
 
-The goal of this project is to implement a set of RESTful services to manage customer, account, owned products and purchase order.
+The goal of this project is to implement a set of RESTful services to manage customer, account, owned products and purchase order. The data persisted in DB2 include around 3500 fake customer records to serve as a training and test sets for churn risk scoring model.  
 
 ## Target audience
 * Architects who want to understand the components involved and the architecture constraints and design considerations
 * Developers who want to get starting code for RESTful app on WebSphere Liberty, and educate themselves on the related technologies:  Data Access Object Pattern, Data Transfer Object pattern, and Java Persistence Management. We are addressing packaging as docker image and define helm chart for IBM Cloud Private and kubernetes cluster deployment
 
-## Table of Contents
+# What you will learn
+* Implement REST api using JAXRS annotation, document the API with swagger annotations
+* Use gradle to compile, test, package the application
+* Deploy to standalone liberty server, but also as docker image to IBM Cloud Private
+
+# Table of Contents
 * [Requirements](#requirements)
 * [Code explanation](#code-explanation)
-* [API definition](#api-definition)
+* [API management](#api-definition)
 * [Build and deploy](#build-and-deploy)
 * [Install on ICP](#ibm-cloud-private-deployment)
 * [DB2 Creation](docs/DB2Creation.md)
-* [Test Driven Development](#test-driven-development)
-* [Extract Load Data to Warehouse](docs/db2-to-db2warehouse.md)
+* [Extract Load Data to DB2 Warehouse](docs/db2-to-db2warehouse.md)
 
-## Requirements
-The requirements are simple: support the creation, update, read and delete of customers. Customer has one account and own products (telecom products but could be other type).
+# Requirements
+The requirements are quite simple: support the creation, update, read and delete of customer records. Customer has one account and own products (telecom products but could be any type of product).
 The purchase order is not fully implemented yet. It may evolve in future if we want to demonstrate analytics capabilities on product recommendations.
 
-## Code Explanation
-This micro service is using JAX-RS to expose RESTful APIs for all basic operations on the customer and account entities. There are a lot of articles on how to develop a RESTful application using JAXRS, we will not rewrite everything, but we still want to present the steps we followed, so they can be used as a cheat sheet.
+# Code Explanation
+This microservice is using JAX-RS to expose RESTful APIs for all the basic operations on the customer and account entities. There are a lot of articles on how to develop a RESTful application using JAXRS, we will not rewrite everything, but we still want to present the steps we followed, so they can be used as a cheat sheet for your own development.
 
-### Application
-A JAX-RS application has a set of resources defined. Here we have CustomerResource, Account and PurchaseOrder. See the class RAIntegrationApplication:
+## Application
+A JAX-RS application has a set of resources defined. Here we have CustomerResource, AccountResource and PurchaseOrderResource. See the class RAIntegrationApplication:
 ```java
 @ApplicationPath("/caseserv")
 @SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAX-RS API for customer management micro service")})
@@ -48,7 +52,7 @@ By default JAX-RS instantiates the resource classes per HTTP request. You will u
 
 The `@ApplicationPath` is an annotation from JAX-RS to specify the root context of the web application.
 
-The Purchase Order may be externalize to a separate micro service, as only the customer id and product ids are needed during the creation of an order. Even if the data base is the same the logic and ownership of this logic may be different than the customer one.
+The Purchase Order may be externalize to a separate microservice, as only the customer id and product ids are needed during the creation of an order. Even if the data base is the same the logic and ownership of this logic may be different than the customer one. So a good candidate to move to a new microservice.
 
 ### Customer resource
 Created a Customer resource Java class and add JAXRS annotations to define the URL paths and the swagger documentation:
@@ -57,7 +61,7 @@ Created a Customer resource Java class and add JAXRS annotations to define the U
 @Api("Customer management micro service API")
 	public class CustomerResource {
 	   //...
-	    @GET
+	  @GET
 		@Path(value="/{id}")
 		@ApiOperation(value = "Get customer and his/her account with ID")
 		@Produces(MediaType.APPLICATION_JSON)
@@ -65,15 +69,16 @@ Created a Customer resource Java class and add JAXRS annotations to define the U
 			@ApiResponse(code = 404, message = "Customer not found") })
 		public Response getCustomerById(@PathParam("id")long id) throws DALException{
 			logger.warning((new Date()).toString()+" Get Customer "+id);
-			Customer c = customerDAO.getCustomerById(id);
-			if (c != null) {
-				return Response.ok().entity(new CustomerAccount(c)).build();
-			} else {
-				return Response.status(Status.NOT_FOUND).build();
-			}
+				Customer c = customerService.getCustomerById(Long.parseLong(id));
+				if (c != null) {
+					return Response.ok().entity(new CustomerAccount(c)).build();
+				} else {
+					return Response.status(Status.NOT_FOUND).build();
+				}
     }
+		  // ... other operations not shown
 	}
-  // ... other operations not shown
+
   ```
 The `@GET, @Path and @PathParam` annotations are from JAX-RS. The `@Api, @ApiOperation, @ApiResponse` are from swagger, for API documentation purpose.
 
@@ -83,7 +88,9 @@ The app is packaged and exposed with a web context set to `caseserv`. The web.xm
 
 The above annotations exposes the method getCustomerById to a HTTP GET on the above URL with the customer id as suffix. The chosen implementation is to use the Response object to control return code and the payload. We could have returned the Customer data directly too.
 
- Also we are not exposing the Customer object as is: the Customer is a JPA entity mapped to a CUSTOMER table in the database, we want to build a view of the data needed by the consumers of the service. The CustomerAccount is a Data Transfer Object pattern. It may not be the best view but we may refactor it later when requirements will add up.
+Also we are not exposing the Customer object as is: the Customer is a JPA entity mapped to a CUSTOMER table in the database, we want to build a view of the data needed by the consumers of the service. The CustomerAccount is a Data Transfer Object pattern. This is a good practice to assess what consumer needs in term of data. It may not be the best view but we may refactor it later when requirements will add up.
+
+The resource class is really dedicated to support Annotation and to return HTTP object. The business and integration logic is done within the CustomerService class. This class will be easier to unit test, and can be reused by other resource if needed.
 
 ### Data model
 The entity data model to support is presented in the figure below. It is similar to the tables in backend database. The java classes have JPA annotations to control the persistence and management of the relationship, persistence strategy and loading strategy.
@@ -97,8 +104,8 @@ The entity data model to support is presented in the figure below. It is similar
 We also delivered SQL statements and scripts to create the database in DB2. See the folder `db-scripts`.
 
 
-### Web app descriptors
-Specify the url mapping to the pre-defined servlet serving REST resources in the web.xml:
+### Web app descriptor
+The web.xml specifies the url mapping to the pre-defined servlet serving REST resources:
 ```xml
 <servlet>
  <description>
@@ -107,7 +114,7 @@ Specify the url mapping to the pre-defined servlet serving REST resources in the
  <servlet-class>com.ibm.websphere.jaxrs.server.IBMRestServlet</servlet-class>
  <init-param>
    <param-name>javax.ws.rs.Application</param-name>
-   <param-value>ibm.ra.integration.RAIntegrationApplication</param-value>
+   <param-value>ibm.ra.customer.RAIntegrationApplication</param-value>
  </init-param>
  <load-on-startup>1</load-on-startup>
  <enabled>true</enabled>
@@ -121,8 +128,8 @@ Specify the url mapping to the pre-defined servlet serving REST resources in the
 
 ### Data Access Object Classes
 
-Implement the different DAOs to access the database. We are using a pure Java Persistence API implementation. We defined a BaseDAO for generic persistence operations like save, update, delete... Each DAO supports a specific entity and its CRUD operations.
-The following code example illustrates  typical JPA pattern of using predefined query defined at the entity level in the customer class:
+Those classes implement the DAO pattern to access the database. We are using a pure Java Persistence API implementation. We defined a BaseDAO for generic persistence operations like save, update, delete... Then each DAO supports a specific entity and its CRUD operations.
+The following code example illustrates a typical JPA pattern of using predefined named query at the entity level:
 
 ```
 @Entity(name="Customer")
@@ -148,14 +155,53 @@ public Collection<Customer> getCustomers() throws DALException {
 }
 ```
 The Customer to account is a one to one relationship and an account could not live without a customer so when a new customer is created the account is persisted via the cascade strategy.
-For the customer to owned product the situation is not the same. We want to avoid using the product DAO inside the customer DAO. So the integration will be done in the service level, the CustomerResource class. We will discuss this approach in the [TDD](#test-driven-development) section below.
+For the customer to owned products the situation is not the same. We want to avoid using the product DAO inside the customer DAO. So the integration will be done in the service level, the CustomerService class. We will discuss this approach in the next [TDD](#test-driven-development) section.
 
-### Connect the dots
+## Test Driven Development
+### Validating DAO / JPA
+To implement the DAO we start by specifying the DAO interface  and then implemented the unit tests for each method, before coding the JPA code. The junit tests are in the package `dao.jpa.ut` under the folder `src/test/java`.
 
-The resource class delegates calls to the DAO. Implement any business logic in the service. We did not decouple the API class from the service where the business logic can be done and tested in isolation. It may make sense to do this refactoring in the future.
+The test has a specific persistence configuration that uses derby embedded so it is easy to delete the DB after each test class. The persistence.xml is under `src/test/resources/META-INF` folder.
+```xml
+<persistence-unit name="customer" transaction-type="RESOURCE_LOCAL">
+ <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+   <class>po.model.Party</class>
+   <class>po.model.Customer</class>
+   <class>po.model.Account</class>
+ <properties>
+ <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+```
+The `BaseTest` has an AfterClass method to delete the database.
 
-### API definition
-With Liberty it is possible to visualize the API definition for a deployed JAXRS resource. The product documentation is [here](), but to summarize we did two things:
+When running the test in Eclipse, be sure to add to the vm arg of each test, the following `-javaagent:./lib/openjpa-all-2.4.2.jar` to get the entities JPA enhanced. The figure below presents the setting in eclipse `run configuration`:  
+
+![](docs/jpa-enhance-ut.png)
+
+Also as we are using a dedicated `persistence.xml` to use derby for unit testing, it is important to modify the classpath of the `run configuration` and reference the test resource folder: select the `User Entries`, then `Advanced` button, select `Add folders`, and select test `src/test/resources` folder, then finally be sure it is above the default classpath, using `Up` button to change the order.  
+
+![](docs/cp-ut-jpa.png)
+
+### Populating Customer database
+When connected to the test or staging platform it is recommended to use our data sets to prepare data for the machine learning / analytics future work and to demonstrate the application. The folder `dataset` has two csv files with customer records. The customer.csv has 10 records, it should be used to validate the deployment, and everything works fine. The customer_churn.csv has all the remaining records.
+
+For the other use case validation we have two java programs to be executed in this order:
+* AddProductsToBackend: create basic products to be use as smartphone
+* AddNeededCustomersToBackend: add Eddie and Bob for demonstration purpose.
+
+You need to have direct access to the Database server and run the service in docker with the command:
+```
+$ docker run -p 9080:9080 ibmcase/customerms
+```
+Accessing the following the following URL should give you the created user data:
+On your localhost:
+http://localhost:9080/caseserv/api/v1/customers/1
+or
+http://localhost:9080/caseserv/api/v1/customers/email/bobbuilder@email.com
+
+The web app of [this repository](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) is the front end to access those data.
+
+## API definition
+With Liberty it is possible to visualize the API definition for a deployed JAXRS resource. The product documentation is [here](https://www.ibm.com/support/knowledgecenter/en/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_api_discovery.html), but to summarize we did two things:
 * define a yaml file for the swagger and save it to webapp/META-INF/stub folder.
 * modify the server.xml to add api discovery feature.
 ```
@@ -176,7 +222,7 @@ As part of our development methodology we are using since 2003, we develop by st
 To unit test the DAO we are using Derby Embedded, which is compatible with DB2, and uses in memory database. So it is very easy to set up data for testing and delete the database at the tests completion. The class BaseTest is defining one `AfterClass` method to delete the DB.
 Each DAO has at least one unit test class implemented using [junit](http://junit.org).
 
-For the CustomerService 
+For the CustomerService
 ## Build and Deploy
 
 ### DB2 CUSTDB database
@@ -217,45 +263,3 @@ $ helm del --purge green-customerms
 # under the chart folder
 $ helm install green-customerms/ --name green-customerms --namespace green-compute
 ```
-## Test Driven Development
-### Validating DAO / JPA
-To implement the DAO we start by specifying the DAO interface  and then implemented the unit tests or each method, before coding the JPA code. The junit tests are in the package `dao.jpa.ut` under the folder `src/test/java`.
-
-The test has a specific persistence configuration that uses derby embedded so it is easy to delete the DB after the tests. The persistence.xml is under `src/test/resources/META-INF` folder.
-```xml
-<persistence-unit name="customer" transaction-type="RESOURCE_LOCAL">
- <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-   <class>po.model.Party</class>
-   <class>po.model.Customer</class>
-   <class>po.model.Account</class>
- <properties>
- <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-```
-The `BaseTest` has an AfterClass method to delete the database.
-
-When running the test in Eclipse be sure to add to the vm arg of each test, the following `-javaagent:./lib/openjpa-all-2.4.2.jar` to get the entities JPA enhanced. The figure below presents the setting in eclipse `run configuration`:  
-
-![](docs/jpa-enhance-ut.png)
-
-Also as we are using a dedicated `persistence.xml` to use derby for unit testing, it is important to modify the classpath of the `run configuration` and reference the test resource folder: select the `User Entries`, then `Advanced` button, select `Add folders`, and select test `src/test/resources` folder, then finally be sure it is above the default classpath, using `Up` to order it.  
-
-![](docs/cp-ut-jpa.png)
-
-### Populating Customer database
-When connected to the test or staging platform it is recommended to use our data sets to prepare data for the machine learning / analytics future work and to demonstrate the application. The folder `dataset` has 2 csv files. The customer.csv has 10 records, it should be used to validate the deployment, and everything works fine. The customer_churn.csv has all the remaining records.
-
-For the other use case validation we have two java programs to be executed in this order:
-* AddProductsToBackend: create basic products to be use as smartphone
-* AddNeededCustomersToBackend: add Eddie and Bob for demonstration purpose.
-
-You need to have direct access to the Database server and run the service in docker with the command:
-```
-$ docker run -p 9080:9080 ibmcase/customerms
-```
-Accessing the following the following URL should give you the created user data:
-On your localhost:
-http://localhost:9080/caseserv/api/v1/customers/1
-or
-http://localhost:9080/caseserv/api/v1/customers/email/bobbuilder@email.com
-
-The web app of [this repository](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) is the front end to access those data.

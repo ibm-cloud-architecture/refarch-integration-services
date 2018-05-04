@@ -12,7 +12,7 @@ RUN gradle build
 # STAGE: Deploy
 FROM websphere-liberty:webProfile7
 MAINTAINER https://github.com/ibm-cloud-architecture - IBM - Jerome Boyer
-RUN installUtility install --acceptLicense jpa-2.0  adminCenter-1.0 jaxrs-2.0 ejbLite-3.2 localConnector-1.0 apiDiscovery-1.0
+RUN installUtility install --acceptLicense jpa-2.0  openapi-3.0 adminCenter-1.0 jaxws-2.2 jaxrs-2.0 ejbLite-3.2 localConnector-1.0 apiDiscovery-1.0
 RUN apt-get update -y && apt-get install -y openssh-server
 
 # Create Directory

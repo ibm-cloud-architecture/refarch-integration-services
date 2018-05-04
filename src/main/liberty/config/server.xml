@@ -31,7 +31,7 @@
        <feature>jaxrs-2.0</feature>
        <feature>ejbLite-3.2</feature>
         <feature>adminCenter-1.0</feature>
-        <feature>apiDiscovery-1.0</feature>
+        <feature>openapi-3.0</feature>
     </featureManager>
 
 
