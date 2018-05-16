@@ -1,5 +1,5 @@
 def podLabel = "mypod-${UUID.randomUUID().toString()}"
-def appName = "greencompute-customer-ms"
+def appName = "greencompute-customerms"
 
 podTemplate(label: podLabel,
     serviceAccount: 'jenkins',
@@ -24,10 +24,10 @@ podTemplate(label: podLabel,
                 NAMESPACE=`cat /var/run/configs/registry-config/namespace`
                 REGISTRY=`cat /var/run/configs/registry-config/registry`
 
-                docker build -t \${REGISTRY}/\${NAMESPACE}/$appName:${env.BUILD_NUMBER} .
+                docker build -f Dockerfile-jenkins -t \${REGISTRY}/\${NAMESPACE}/$appName:${env.BUILD_NUMBER} .
                 """
             }
-            stage('Push Docker Image to Registry') {
+            stage('Push Docker Image to ICP Private Registry') {
                 sh """
                 #!/bin/bash
                 NAMESPACE=`cat /var/run/configs/registry-config/namespace`

@@ -1,4 +1,15 @@
+# STAGE: Build
+FROM ibmcase/gradle:latest as builder
 
+# Copy Code Over
+RUN mkdir /servapp
+WORKDIR /servapp
+COPY . /servapp
+
+# Build jar
+RUN gradle build
+
+# STAGE: Deploy
 # FROM openliberty/open-liberty
 FROM websphere-liberty:webProfile7
 MAINTAINER https://github.com/ibm-cloud-architecture - IBM - Jerome Boyer

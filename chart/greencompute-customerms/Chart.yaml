@@ -1,4 +1,5 @@
 apiVersion: v1
+appVersion: "1.0"
 description: Customer, account and purchase order micro - service for green compute
-name: green-customerms
-version: 
+name: greencompute-customerms
+version: 0.0.4
