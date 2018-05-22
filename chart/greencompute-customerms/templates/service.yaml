@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "greencompute-customerms.fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app: {{ template "greencompute-customerms.name" . }}
+    chart: {{ template "greencompute-customerms.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -15,5 +15,5 @@ spec:
       protocol: TCP
       name: {{ .Values.service.name }}
   selector:
-    app: {{ template "fullname" . }}
+    app: {{ template "greencompute-customerms.name" . }}
     release: {{ .Release.Name }}
