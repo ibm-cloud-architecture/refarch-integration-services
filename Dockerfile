@@ -9,9 +9,9 @@ RUN apt-get update -y && apt-get install -y openssh-server
 RUN mkdir /opt/ibm/wlp/usr/shared/config/lib
 
 # Add jar and war files
-COPY --from=builder /servapp/src/main/liberty/config/server.xml /opt/ibm/wlp/usr/servers/defaultServer
-COPY --from=builder /servapp/lib/db2jcc4.jar /opt/ibm/wlp/usr/shared/config/lib
-COPY --from=builder /servapp/build/libs/refarch-integration-services*.war /opt/ibm/wlp/usr/servers/defaultServer/apps
+COPY src/main/liberty/config/server.xml /opt/ibm/wlp/usr/servers/defaultServer
+COPY lib/db2jcc4.jar /opt/ibm/wlp/usr/shared/config/lib
+COPY build/libs/refarch-integration-services*.war /opt/ibm/wlp/usr/servers/defaultServer/apps
 
 # Set Port
 EXPOSE 9080 9443
