@@ -1,7 +1,7 @@
-# Customer Management micro service
-This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) and hybrid cloud integration [solution]((https://github.com/ibm-cloud-architecture/refarch-integration).
+# Customer Management Microservice
+This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) and hybrid cloud integration [solution](https://github.com/ibm-cloud-architecture/refarch-integration).
 
-Updated 5/03/2018.
+Updated 8/21/2018.
 
 The goal of this project is to implement a set of RESTful services to manage customer, account, owned products and purchase order. The data persisted in DB2 include around 3500 fake customer records to serve as a training and test sets for churn risk scoring model.  
 
@@ -34,7 +34,7 @@ This microservice is using JAX-RS to expose RESTful APIs for all the basic opera
 A JAX-RS application has a set of resources defined. Here we have CustomerResource, AccountResource and PurchaseOrderResource. See the class RAIntegrationApplication:
 ```java
 @ApplicationPath("/caseserv")
-@SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAX-RS API for customer management micro service")})
+@SwaggerDefinition(tags= {@Tag(name = "Customer API",description=" JAX-RS API for customer management microservice")})
 public class RAIntegrationApplication extends Application {
 
 	@Override
@@ -58,7 +58,7 @@ The Purchase Order may be externalize to a separate microservice, as only the cu
 Created a Customer resource Java class and add JAXRS annotations to define the URL paths and the swagger documentation:
  ```java
 @Path("/customers")
-@Api("Customer management micro service API")
+@Api("Customer management microservice API")
 	public class CustomerResource {
 	   //...
 	  @GET
@@ -158,6 +158,11 @@ The Customer to account is a one to one relationship and an account could not li
 For the customer to owned products the situation is not the same. We want to avoid using the product DAO inside the customer DAO. So the integration will be done in the service level, the CustomerService class. We will discuss this approach in the next [TDD](#test-driven-development) section.
 
 ## Test Driven Development
+As part of our development methodology we are using since 2003, we develop by starting by the tests. So the `src/test/java` folder includes a set of package to unit test each of the application layer: DAO, service.
+
+To unit test the DAO we are using Derby Embedded, which is compatible with DB2, and uses in memory database. So it is very easy to set up data for testing and delete the database at the tests completion. The class BaseTest is defining one `AfterClass` method to delete the DB.
+Each DAO has at least one unit test class implemented using [junit](http://junit.org).
+
 ### Validating DAO / JPA
 To implement the DAO we start by specifying the DAO interface  and then implemented the unit tests for each method, before coding the JPA code. The junit tests are in the package `dao.jpa.ut` under the folder `src/test/java`.
 
@@ -216,19 +221,12 @@ We also developed a `swagger.yaml` file in the folder `src/main/webapp/META-INF/
 
 As Liberty supports generation of swagger by leveraging annotations in resources classes and the ApiDiscovery feature.
 
-## Test Driven Development
-As part of our development methodology we are using since 2003, we develop by starting by the tests. So the `src/test/java` folder includes a set of package to unit test each of the application layer: DAO, service.
-
-To unit test the DAO we are using Derby Embedded, which is compatible with DB2, and uses in memory database. So it is very easy to set up data for testing and delete the database at the tests completion. The class BaseTest is defining one `AfterClass` method to delete the DB.
-Each DAO has at least one unit test class implemented using [junit](http://junit.org).
-
-For the CustomerService
 ## Build and Deploy
 
 ### DB2 CUSTDB database
-For the DB2 see [this note](docs/DB2Creation.md)
+For the DB2 customer database creation see [this note for details](docs/DB2Creation.md)
 
-### Micro Service Java Code
+### Microservice Java Code
 The project was developed with [Eclipse Neon](http://www.eclipse.org/neon) with the following plugins added to the base eclipse:
 * Websphere Developer Tool for Liberty: using the Marketplace and searching WebSphere developer, then use the Eclipse way to install stuff.
 * Gradle eclipse plugin
@@ -250,16 +248,24 @@ You can test locally using `docker run -p 9080:9080 ibmcase/customerms` and then
 We also added some integration tests under the package `ibm.caseserv.itests` folder.
 
 ## IBM Cloud Private deployment
-We are following the same approach as the other micro service deployment we do at http://github.com/ibm-cloud-architecture, for example the [Case web app](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) or the [Data Access layer](https://github.com/ibm-cloud-architecture/refarch-integration-inventory-dal/blob/master/docs/icp/README.md) projects.
-* dockerize the application with Liberty: a Dockerfile is delivered as part of this project. See previous section.
-* Tag the docker images with the name of the remote docker repository, the target namespace and the name and version of the image. For example: `greencluster.icp:8500/greencompute/customerms:v0.0.1`
-* docker login to remote repo: `docker login greencluster.icp:8500`
-* docker push the newly created image to the remote repository: `docker push greencluster.icp:8500/greencompute/customerms:v0.0.1`
-* define helm charts with deployment configuration: the chart definition is under chart/green-customerms
-* use `kubectl` to access the remote Kubernetes cluster and `helm` CLI to deploy the helm chart and work on the deployed pod.
+We are following the same approach as the other microservice deployment we do at http://github.com/ibm-cloud-architecture, for example the [Case web app](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) or the [Data Access layer service](https://github.com/ibm-cloud-architecture/refarch-integration-inventory-dal/blob/master/docs/icp/README.md) projects.
+The steps can be summarized as below:
+* dockerize the application with Liberty: a Dockerfile is delivered as part of this project. See previous section: `docker build -t ibmcase/customerms .``
+* If you use private docker repository within ICP, tag the docker images with the name of the remote docker repository, the target namespace and the name and version of the image. For example: `greencluster.icp:8500/greencompute/customerms:v0.0.1`
+ * docker login to remote repo: `docker login greencluster.icp:8500`
+ * docker push the newly created image to the remote repository: `docker push greencluster.icp:8500/greencompute/customerms:v0.0.1`
+* As we use the public dockerhub repository we docker login and use docker push:
+ ```
+ $
+ ```
+* One time only: define helm charts with deployment configuration: the chart definition is under chart/green-customerms
+* login to the remote cluster: `bx pr login -u admin --skip-ssl-validation -a https://172.16.40.130:8443`
+* use `helm` CLI to deploy the helm chart and work on the deployed pod.
 ```
-$ helm list
-$ helm del --purge green-customerms
+$ helm list --tls
+$ helm del --purge green-customerms --tls
 # under the chart folder
-$ helm install green-customerms/ --name green-customerms --namespace green-compute
+$ helm install green-customerms/ --name green-customerms --namespace greencompute --tls
 ```
+
+In case of problem we are centralizing the troubleshooting in [this note](https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/icp/troubleshooting.md).
