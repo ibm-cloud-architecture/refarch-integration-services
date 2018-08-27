@@ -26,7 +26,7 @@ echo 'old version: ' $prev ' new version to use:' $v
 ./gradlew -Dorg.gradle.daemon=false build
 
 # Build docker
-docker build -t ibmcase/$namespace-$progname:$v .
+docker build -t ibmcase/$helmchart:$v .
 
 
 ## modify helm version
@@ -35,7 +35,6 @@ a=$(grep 'version' Chart.yaml)
 sed -i -e "s/$a/version: ${v:1}/" Chart.yaml
 ## same for the tag in values.yaml
 sed -i -e "s/tag: $prev/tag: $v/" values.yaml
-sed -i -e "s/green-cluster.icp/$k8cluster/" values.yaml
 rm values.yaml-e
 rm Chart.yaml-e
 cd ..

@@ -39,16 +39,16 @@ public class CustomerResource {
 		 customerService= new CustomerService();
 
 	 }
-	 
+
 	@GET
 	@Path("/version")
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiOperation(value="Get version of the API", notes="")
-	@ApiResponses({ @ApiResponse(code = 200, message = "version v0.0.6", response = String.class) })
+	@ApiResponses({ @ApiResponse(code = 200, message = "version v0.0.7", response = String.class) })
 	public Response getVersion(){
-		return Response.ok().entity(new String("version v0.0.6")).build();
+		return Response.ok().entity(new String("version v0.0.7")).build();
 	}
-	
+
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -127,7 +127,7 @@ public class CustomerResource {
 		try {
 			String status= customerService.deleteCustomer(id);
 			if (CustomerService.SUCCESS.equals(status) ) {
-				return Response.ok().build(); 
+				return Response.ok().build();
 			}
 		} catch(DALException de) {
 			if (de.getFaultInfo().getCode().equals("")) {
