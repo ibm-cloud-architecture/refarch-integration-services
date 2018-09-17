@@ -8,11 +8,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import dao.jpa.ut.ModelFactory;
-import ibm.caseserv.itests.TestDeployedRestCustomerService.Rep;
 import po.dto.model.CustomerAccount;
 import po.dto.model.ProductDTO;
-import po.model.Product;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AddNeededCustomersToBackend {
 	static CustomerRestClient client;
@@ -32,7 +29,7 @@ public class AddNeededCustomersToBackend {
 	@Test
 	public void addEddieCustomer()  {
 		try {
-			String rep=client.executeGetMethodAsJson("/customers/email/eddie@email.com",null);
+			client.executeGetMethodAsJson("/customers/email/eddie@email.com",null);
 		} catch (Exception e) {
 			CustomerAccount c = new CustomerAccount();
 			c.setId(new Long(1));
@@ -56,11 +53,11 @@ public class AddNeededCustomersToBackend {
 			c.setRatePlan("3");
 			ProductDTO pDTO = new ProductDTO();
 			pDTO.setPhoneNumber("4157890001");
-			pDTO.setProductName("ipho");
+			pDTO.setName("ipho");
 			c.getDevicesOwned().add(pDTO);
 			pDTO = new ProductDTO();
 			pDTO.setPhoneNumber("4157890002");
-			pDTO.setProductName("sam");
+			pDTO.setName("sam");
 			c.getDevicesOwned().add(pDTO);
 			try {
 				client.executeCustomerPost("/customers", c);
@@ -73,7 +70,7 @@ public class AddNeededCustomersToBackend {
 	@Test
 	public void addBobCustomer()  {
 		try {
-			String rep=client.executeGetMethodAsJson("/customers/email/bobbuilder@email.com",null);
+			client.executeGetMethodAsJson("/customers/email/bobbuilder@email.com",null);
 		} catch (Exception e) {
 			CustomerAccount c = new CustomerAccount();
 			c.setId(new Long(3));
@@ -97,7 +94,7 @@ public class AddNeededCustomersToBackend {
 			c.setRatePlan("1");
 			ProductDTO pDTO = new ProductDTO();
 			pDTO.setPhoneNumber("4157890003");
-			pDTO.setProductName("moto");
+			pDTO.setName("moto");
 			c.getDevicesOwned().add(pDTO);
 			try {
 				client.executeCustomerPost("/customers", c);
@@ -122,7 +119,7 @@ public class AddNeededCustomersToBackend {
 		CustomerAccount ca = client.getParser().fromJson(rep, CustomerAccount.class);
 		Assert.assertTrue("TheBuilder".equals(ca.getLastName()));
 		ProductDTO p = ca.getDevicesOwned().get(0);
-		System.out.println(p.getPhoneNumber()+" "+p.getProductName());
+		System.out.println(p.getPhoneNumber()+" "+p.getName());
 		System.out.println(ca.getAccountNumber()+" "+ca.getBalance());
 	}
 }

@@ -33,10 +33,11 @@ public class CustomerAccount {
 	protected double estimatedIncome;
 	protected String carOwner;
 	protected String profession;
+	protected String churnClass;
+	protected String churnStatus;
 	@ApiModelProperty(required = false, example = "Will be defined by the scoring service")
-	protected String churn;
-	protected double churnRisk;
-	protected String zipcode;
+	protected double churn;
+	protected String zipCode;
 	protected String maritalStatus;
 	protected String mostDominantTone;
 	// Account account;
@@ -68,10 +69,10 @@ public class CustomerAccount {
 		this.estimatedIncome=c.getEstimatedIncome();
 		this.profession=c.getProfession();
 		this.carOwner=c.getCarOwner();
-		this.churn=c.getChurn();
-		this.churnRisk=c.getChurnRisk();
+		this.churnStatus=c.getChurnStatus();
+		this.churn=c.getChurnRisk();
 		this.maritalStatus=c.getMaritalStatus();
-		this.zipcode=c.getZipCode();
+		this.zipCode=c.getZipCode();
 		this.mostDominantTone=c.getMostDominantTone();
 		if (c.getAccount() != null) {
 			this.accountNumber=c.getAccount().getAccountNumber();
@@ -110,8 +111,8 @@ public class CustomerAccount {
 		c.setEstimatedIncome(this.getEstimatedIncome());
 		c.setCarOwner(this.isCarOwner());
 		c.setProfession(this.getProfession());
-		c.setChurn(this.getChurn());
-		c.setChurnRisk(this.getChurnRisk());
+		c.setChurnStatus(this.getChurnStatus());
+		c.setChurn(this.getChurnRisk());
 		c.setZipCode(this.getZipcode());
 		c.setMaritalStatus(this.getMaritalStatus());
 		c.setMostDominantTone(this.getMostDominantTone());
@@ -345,20 +346,20 @@ public class CustomerAccount {
 		this.ratePlan = ratePlan;
 	}
 
-	public String getChurn() {
-		return churn;
+	public String getChurnStatus() {
+		return churnStatus;
 	}
 
-	public void setChurn(String churn) {
-		this.churn = churn;
+	public void setChurnStatus(String churn) {
+		this.churnStatus = churn;
 	}
 
 	public String getZipcode() {
-		return zipcode;
+		return zipCode;
 	}
 
 	public void setZipcode(String zipcode) {
-		this.zipcode = zipcode;
+		this.zipCode = zipcode;
 	}
 
 
@@ -379,11 +380,11 @@ public class CustomerAccount {
 	}
 
 	public double getChurnRisk() {
-		return churnRisk;
+		return churn;
 	}
 
 	public void setChurnRisk(double churnRisk) {
-		this.churnRisk = churnRisk;
+		this.churn = churnRisk;
 	}
 
 	public List<ProductDTO> getDevicesOwned() {
@@ -393,6 +394,30 @@ public class CustomerAccount {
 
 	public void setDevicesOwned(List<ProductDTO> devicesOwned) {
 		this.devicesOwned = devicesOwned;
+	}
+
+	public String getChurnClass() {
+		return churnClass;
+	}
+
+	public void setChurnClass(String churnClass) {
+		this.churnClass = churnClass;
+	}
+
+	public double getChurn() {
+		return churn;
+	}
+
+	public void setChurn(double churn) {
+		this.churn = churn;
+	}
+
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
 
 

@@ -1,13 +1,13 @@
 # Customer Management Microservice
-This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics public github](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) and hybrid cloud integration [solution](https://github.com/ibm-cloud-architecture/refarch-integration).
+This project is part of the 'IBM Data Analytics Reference Architecture' solution, available at [https://github.com/ibm-cloud-architecture/refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-analytics) and the specific Customer churn solution described in [refarch-cognitive-analytics](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics) public github and hybrid cloud [integration solution](https://github.com/ibm-cloud-architecture/refarch-integration).
 
-Updated 8/21/2018.
+Updated 9/17/2018 New persistence model
 
-The goal of this project is to implement a set of RESTful services to manage customer, account, owned products and purchase order. The data persisted in DB2 include around 3500 fake customer records to serve as a training and test sets for churn risk scoring model.  
+The goal of this project is to implement a set of RESTful APIs to manage customer, account, owned products to demonstrate analytics capabilities. The data persisted in DB2 include around 3500 fake customer records to serve as a training and test sets for churn risk scoring model.  
 
 ## Target audience
-* Architects who want to understand the components involved and the architecture constraints and design considerations
-* Developers who want to get starting code for RESTful app on WebSphere Liberty, and educate themselves on the related technologies:  Data Access Object Pattern, Data Transfer Object pattern, and Java Persistence Management. We are addressing packaging as docker image and define helm chart for IBM Cloud Private and kubernetes cluster deployment
+* **Architects** who want to understand the components involved and the architecture constraints and design considerations. The implementation uses microservice approach.
+* **Developers** who want to get starting code for RESTful app on WebSphere Liberty, and educate themselves on the related technologies:  Data Access Object Pattern, Data Transfer Object pattern, and Java Persistence Management, JAXRS. We are addressing packaging as docker image and define helm chart for IBM Cloud Private and kubernetes cluster deployments.
 
 # What you will learn
 * Implement REST api using JAXRS annotation, document the API with swagger annotations
@@ -66,7 +66,7 @@ Created a Customer resource Java class and add JAXRS annotations to define the U
 		@ApiOperation(value = "Get customer and his/her account with ID")
 		@Produces(MediaType.APPLICATION_JSON)
 		@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = CustomerAccount.class),
-			@ApiResponse(code = 404, message = "Customer not found") })
+		@ApiResponse(code = 404, message = "Customer not found") })
 		public Response getCustomerById(@PathParam("id")long id) throws DALException{
 			logger.warning((new Date()).toString()+" Get Customer "+id);
 				Customer c = customerService.getCustomerById(Long.parseLong(id));
@@ -101,8 +101,7 @@ The entity data model to support is presented in the figure below. It is similar
 
  ![](docs/CustomerDTO.png)
 
-We also delivered SQL statements and scripts to create the database in DB2. See the folder `db-scripts`.
-
+We also delivered SQL statements and scripts to create the database in DB2. See the folder `db-sql/customer` in the [DB2 project](https://github.com/ibm-cloud-architecture/refarch-integration-inventory-db2).
 
 ### Web app descriptor
 The web.xml specifies the url mapping to the pre-defined servlet serving REST resources:

@@ -9,10 +9,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import dao.jpa.ut.ModelFactory;
 import po.dto.model.CustomerAccount;
 import po.dto.model.ProductDTO;
-import po.model.Product;
+import dao.jpa.ut.ModelFactory;
 
 /** 
  * Test at the service level, running locally, could be docker run or a wlp start
@@ -52,7 +51,7 @@ public class TestDeployedRestCustomerService {
 		String rep=client.executeGetMethodAsJson("/products",null);
 		ProductDTO[] l=client.getParser().fromJson(rep,ProductDTO[].class);
 		for (ProductDTO p : l){
-			System.out.println(p.getProductName()+" "+p.getCategoryName()+" "+p.getPrice());
+			System.out.println(p.getName()+" "+p.getProductCategory()+" "+p.getPrice());
 		}
 	}
 	
@@ -64,7 +63,7 @@ public class TestDeployedRestCustomerService {
 		CustomerAccount c = ModelFactory.createCustomerAccount();
 		c.setId(new Long(30000));
 		ProductDTO pdto = new ProductDTO();
-		pdto.setProductName("sam");
+		pdto.setName("sam");
 		pdto.setPhoneNumber("6507004500");
 		c.getDevicesOwned().add(pdto);
 		String rep=client.executeCustomerPost("/customers", c);
@@ -78,7 +77,7 @@ public class TestDeployedRestCustomerService {
 		CustomerAccount ca = client.getParser().fromJson(rep, CustomerAccount.class);
 		Assert.assertTrue("LeBoulanger".equals(ca.getLastName()));
 		ProductDTO p = ca.getDevicesOwned().get(0);
-		System.out.println(p.getPhoneNumber()+" "+p.getProductName());
+		System.out.println(p.getPhoneNumber()+" "+p.getName());
 		System.out.println(ca.getAccountNumber()+" "+ca.getBalance());
 		
 		System.out.println("delete lastly added customer "+customerId);

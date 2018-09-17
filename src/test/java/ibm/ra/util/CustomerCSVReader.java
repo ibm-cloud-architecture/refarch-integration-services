@@ -120,12 +120,12 @@ public class CustomerCSVReader {
         ProductDTO p = new ProductDTO();
     	p.setPhoneNumber("650600"+ca.getId().toString());
         if (attributes[18] != null) {
-        	p.setProductName(attributes[18]);
+        	p.setName(attributes[18]);
         } else {
-        	p.setProductName("sam");
+        	p.setName("sam");
         }
         ca.getDevicesOwned().add(p);
-        ca.setChurn(attributes[19]);
+        ca.setChurnClass(attributes[19]);
     	return ca;
     }
 }

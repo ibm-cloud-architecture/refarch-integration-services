@@ -39,7 +39,7 @@ public class CustomerService {
 			c.setStatus("New");
 			
 			for (ProductDTO pdto : ca.getDevicesOwned()) {
-				Product pho=productDAO.getProductByName(pdto.getProductName());
+				Product pho=productDAO.getProductByName(pdto.getName());
 				c.addProduct(pho,pdto.getPhoneNumber());
 			}
 

@@ -44,9 +44,9 @@ public class CustomerResource {
 	@Path("/version")
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiOperation(value="Get version of the API", notes="")
-	@ApiResponses({ @ApiResponse(code = 200, message = "version v0.0.7", response = String.class) })
+	@ApiResponses({ @ApiResponse(code = 200, message = "version v0.0.8", response = String.class) })
 	public Response getVersion(){
-		return Response.ok().entity(new String("version v0.0.7")).build();
+		return Response.ok().entity(new String("version v0.0.8")).build();
 	}
 
 	@POST

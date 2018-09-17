@@ -29,25 +29,35 @@ public class Customer extends Party{
 	// the following attributes may be used for analytics
 	protected String gender;
 	protected double age;
-	protected int children;
-	protected double estimatedIncome;
+	@Column(nullable=true, length=10)
+	protected String type;
+	@Column(nullable=true, length=20)
+	protected String status;
+	protected int children = 0;
+	protected double estimatedIncome = 10000;
+	@Column(nullable=true, length=8)
+	protected String zipCode;
+	@Column(nullable=true, length=10)
 	protected String carOwner;
 	@Column(nullable=true, length=50)
 	protected String profession;
-	protected String churn="NotEvaluated";
-	protected double churnRisk;
+	protected String churnStatus="NotEvaluated";
+	protected String churnClass="F";
+	@Column(nullable=true,name="churnrisk")
+	protected double churn;
 	protected String maritalStatus;
+
 	protected String mostDominantTone;
 	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name="ACCOUNT_ACCOUNTNUMBER")
 	protected Account account;
 	// Customer owns 1 to many devices / products
-	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade=CascadeType.PERSIST)
 	protected List<ProductAssociation> ownedProducts;
-	
+
 	public Customer(){
 	}
-	
+
 	public Customer(String n) {
 		this.name=n;
 	}
@@ -55,7 +65,7 @@ public class Customer extends Party{
 	public String toString(){
 		return getId()+" "+getName()+" "+getEmailAddress();
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -130,7 +140,7 @@ public class Customer extends Party{
 	public String getCarOwner() {
 		return carOwner;
 	}
-	
+
 	public void setCarOwner(String carOwner) {
 		this.carOwner = carOwner;
 	}
@@ -143,12 +153,12 @@ public class Customer extends Party{
 		this.account = account;
 	}
 
-	public String getChurn() {
-		return churn;
+	public String getChurnStatus() {
+		return churnStatus;
 	}
 
-	public void setChurn(String churn) {
-		this.churn = churn;
+	public void setChurnStatus(String churn) {
+		this.churnStatus = churn;
 	}
 
 	public String getMaritalStatus() {
@@ -176,11 +186,11 @@ public class Customer extends Party{
 	}
 
 	public double getChurnRisk() {
-		return churnRisk;
+		return churn;
 	}
 
 	public void setChurnRisk(double churnRisk) {
-		this.churnRisk = churnRisk;
+		this.churn = churnRisk;
 	}
 
 	public List<ProductAssociation> getOwnedProducts() {
@@ -203,6 +213,38 @@ public class Customer extends Party{
 			getOwnedProducts().add(pa);
 		}
 		//p.getOwners().add(pa);
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public double getChurn() {
+		return churn;
+	}
+
+	public void setChurn(double churn) {
+		this.churn = churn;
+	}
+
+	public String getChurnClass() {
+		return churnClass;
+	}
+
+	public void setChurnClass(String churnClass) {
+		this.churnClass = churnClass;
 	}
 
 }

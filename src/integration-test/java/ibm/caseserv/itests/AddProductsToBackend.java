@@ -2,16 +2,14 @@ package ibm.caseserv.itests;
 
 import java.util.Properties;
 
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import dao.jpa.ut.ModelFactory;
-import ibm.caseserv.itests.TestDeployedRestCustomerService.Rep;
 import po.dto.model.ProductDTO;
 import po.model.Product;
+import dao.jpa.ut.ModelFactory;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AddProductsToBackend {
 	static CustomerRestClient client;
@@ -48,7 +46,7 @@ public class AddProductsToBackend {
 		String rep=client.executeGetMethodAsJson("/products",null);
 		ProductDTO[] l=client.getParser().fromJson(rep,ProductDTO[].class);
 		for (ProductDTO p : l){
-			System.out.println(p.getProductName()+" "+p.getCategoryName()+" "+p.getPrice());
+			System.out.println(p.getName()+" "+p.getProductCategory()+" "+p.getPrice());
 		}
 	}
 }

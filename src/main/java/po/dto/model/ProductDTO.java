@@ -5,31 +5,32 @@ import po.model.Product;
 public class ProductDTO {
 	protected String phoneNumber;
 	protected String packageName;
-	protected String productName;
-	protected String categoryName;
+	protected String name;
+	protected String productCategory;
 	protected double monthlyUsage;
 	protected double downloadSpeed;
 	protected double price;
-	
+
+
 	
 	public ProductDTO(){}
 	
 	public Product toProduct(){
 		Product p = new Product();
-		p.setName(this.getProductName());
+		p.setName(this.getName());
 		p.setPackageName(this.getPackageName());
 		p.setDownloadSpeed(this.getDownloadSpeed());
 		p.setMonthlyUsage(this.getMonthlyUsage());
 		p.setPrice(this.getPrice());
-		p.setProductCategory(this.getCategoryName());
+		p.setProductCategory(this.getProductCategory());
 		return p;
 	}
 	
 	public static ProductDTO toProductDTO(Product p,String phoneNumber){
 		ProductDTO pDTO = new ProductDTO();
-		pDTO.setCategoryName(p.getProductCategory());
+		pDTO.setProductCategory(p.getProductCategory());
 		pDTO.setPhoneNumber(phoneNumber);
-		pDTO.setProductName(p.getName());
+		pDTO.setName(p.getName());
 		pDTO.setPackageName(p.getPackageName());
 		pDTO.setDownloadSpeed(p.getDownloadSpeed());
 		pDTO.setMonthlyUsage(p.getMonthlyUsage());
@@ -57,21 +58,6 @@ public class ProductDTO {
 		this.packageName = productType;
 	}
 
-	public String getProductName() {
-		return productName;
-	}
-
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	public String getCategoryName() {
-		return categoryName;
-	}
-
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
 
 	public double getMonthlyUsage() {
 		return monthlyUsage;
@@ -95,6 +81,22 @@ public class ProductDTO {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getProductCategory() {
+		return productCategory;
+	}
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
 	}
 	
 }

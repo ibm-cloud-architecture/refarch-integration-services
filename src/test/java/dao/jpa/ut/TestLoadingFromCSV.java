@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import ibm.ra.customer.DALException;
 import ibm.ra.integration.dao.CustomerDAOImpl;
@@ -37,7 +38,7 @@ public class TestLoadingFromCSV extends BaseTest {
 	}
 
 
-	//@Test
+	@Test
 	public void testLoadCSV() throws DALException {
 		CustomerCSVReader tool= new CustomerCSVReader();
 		List<CustomerAccount> cl = tool.readCustomersFromCSV("./dataset/customer.csv");
@@ -45,9 +46,9 @@ public class TestLoadingFromCSV extends BaseTest {
 			Customer c=ca.toCustomer();
 			c.setOwnedProducts(null);
 			ProductDTO pdo=ca.getDevicesOwned().get(0);
-			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber()+ " device "+pdo.getProductName());
+			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account: "+ca.getAccountNumber()+ " device: "+pdo.getName());
 			
-			Product pho=daoP.getProductByName(pdo.getProductName());
+			Product pho=daoP.getProductByName(pdo.getName());
 			c.addProduct(pho,pdo.getPhoneNumber());
 			dao.saveCustomer(c);
 		}

@@ -34,7 +34,7 @@ public class TestCustomerService extends BaseTest{
 		}
 	}
 	
-	// @Test
+	@Test
 	public void testCreateCustomerWithProduct(){
 			// products are in DB
 			ProductDTO p= ProductDTO.toProductDTO(ModelFactory.buildIpho(),"65000000");
