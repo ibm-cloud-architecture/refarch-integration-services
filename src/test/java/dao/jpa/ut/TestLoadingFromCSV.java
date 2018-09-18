@@ -45,7 +45,7 @@ public class TestLoadingFromCSV extends BaseTest {
 		for (CustomerAccount ca : cl) {
 			Customer c=ca.toCustomer();
 			c.setOwnedProducts(null);
-			ProductDTO pdo=ca.getDevicesOwned().get(0);
+			ProductDTO pdo=ca.getExistingProducts().get(0);
 			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account: "+ca.getAccountNumber()+ " device: "+pdo.getName());
 			
 			Product pho=daoP.getProductByName(pdo.getName());

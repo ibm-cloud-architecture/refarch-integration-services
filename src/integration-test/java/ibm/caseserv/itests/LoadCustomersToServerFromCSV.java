@@ -18,7 +18,7 @@ public class LoadCustomersToServerFromCSV  {
 		
 		CustomerRestClient client = new CustomerRestClient();
 		for (CustomerAccount ca : cl) {
-			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber()+ " device "+ca.getDevicesOwned().get(0).getPhoneNumber());
+			System.out.println("Upload "+ca.getName()+" age:"+ca.getAge()+" account "+ca.getAccountNumber()+ " device "+ca.getExistingProducts().get(0).getPhoneNumber());
 			
 			
 			try {

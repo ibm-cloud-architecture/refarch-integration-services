@@ -54,11 +54,11 @@ public class AddNeededCustomersToBackend {
 			ProductDTO pDTO = new ProductDTO();
 			pDTO.setPhoneNumber("4157890001");
 			pDTO.setName("ipho");
-			c.getDevicesOwned().add(pDTO);
+			c.getExistingProducts().add(pDTO);
 			pDTO = new ProductDTO();
 			pDTO.setPhoneNumber("4157890002");
 			pDTO.setName("sam");
-			c.getDevicesOwned().add(pDTO);
+			c.getExistingProducts().add(pDTO);
 			try {
 				client.executeCustomerPost("/customers", c);
 			} catch (Exception e1) {
@@ -95,7 +95,7 @@ public class AddNeededCustomersToBackend {
 			ProductDTO pDTO = new ProductDTO();
 			pDTO.setPhoneNumber("4157890003");
 			pDTO.setName("moto");
-			c.getDevicesOwned().add(pDTO);
+			c.getExistingProducts().add(pDTO);
 			try {
 				client.executeCustomerPost("/customers", c);
 			} catch (Exception e1) {
@@ -118,7 +118,7 @@ public class AddNeededCustomersToBackend {
 		String rep=client.executeGetMethodAsJson("/customers/email/bobbuilder@email.com",null);
 		CustomerAccount ca = client.getParser().fromJson(rep, CustomerAccount.class);
 		Assert.assertTrue("TheBuilder".equals(ca.getLastName()));
-		ProductDTO p = ca.getDevicesOwned().get(0);
+		ProductDTO p = ca.getExistingProducts().get(0);
 		System.out.println(p.getPhoneNumber()+" "+p.getName());
 		System.out.println(ca.getAccountNumber()+" "+ca.getBalance());
 	}

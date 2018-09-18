@@ -38,7 +38,7 @@ public class CustomerService {
 			c.setUpdateDate(c.getCreationDate());
 			c.setStatus("New");
 			
-			for (ProductDTO pdto : ca.getDevicesOwned()) {
+			for (ProductDTO pdto : ca.getExistingProducts()) {
 				Product pho=productDAO.getProductByName(pdto.getName());
 				c.addProduct(pho,pdto.getPhoneNumber());
 			}

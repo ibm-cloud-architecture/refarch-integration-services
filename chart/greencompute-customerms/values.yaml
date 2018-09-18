@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: ibmcase/greencompute-customerms
-  tag: v0.0.8
+  tag: v0.0.9
   pullPolicy: Always
 
 service:

@@ -1,17 +1,18 @@
  package ibm.ra.util;
 
-import java.io.BufferedReader;
-
-import java.util.Random;
-
 import ibm.caseserv.itests.CustomerRestClient;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import po.dto.model.CustomerAccount;
 import po.dto.model.ProductDTO;
@@ -48,6 +49,12 @@ public class CustomerCSVReader {
 		}
 	}
 
+	/**
+	 * Read the given csv file and create a list of customer accounts to be persisted later. 
+	 * The missing fields are populated using randomized values
+	 * @param fileName
+	 * @return
+	 */
     public  List<CustomerAccount>  readCustomersFromCSV(String fileName){
     	List<CustomerAccount> cl = new ArrayList<CustomerAccount>();
     	Path pathToFile = Paths.get(fileName); 
@@ -75,8 +82,25 @@ public class CustomerCSVReader {
     	return cl;
     }
     
-    private static String[] mstatus= new String[]{"Single","Married","Widowed","Familly"};
-    private static String[] zipcodes= new String[]{"95051","94000","93000","92100","87430","43000"};
+    public void saveCustomerCSV(List<CustomerAccount> l){
+    	FileWriter fstream;
+    	try {    
+    	 fstream = new FileWriter("customer-out.csv");
+    	 BufferedWriter out = new BufferedWriter(fstream);
+    	 for (CustomerAccount ca : l) {
+    		 out.write(ca.toCsvString()+"\n");
+    	 }
+    	     
+    	 out.close();
+    	}
+    	 catch (IOException e) {
+    	         
+    	 e.printStackTrace();
+    	}
+    }
+    
+    private static String[] mstatus= new String[]{"Single","Married","Widowed"};
+    private static String[] zipcodes= new String[]{"95051","94000","93000","92100","87430","43000","6000","6200"};
     static Random rand = new Random();
     
     private  CustomerAccount createCustomer(String[] attributes){
@@ -113,6 +137,9 @@ public class CustomerCSVReader {
     	ca.setAccountNumber("ACCT_"+ca.getId());
     	ca.setLongDistance(Double.parseDouble(attributes[9]));
     	ca.setInternational(Double.parseDouble(attributes[10]));
+    	if (ca.getInternational() == 0) {
+    		ca.setInternational( 50 * rand.nextDouble());
+    	}
     	ca.setLocal(Double.parseDouble(attributes[11]));
         ca.setDropped(Integer.parseInt(attributes[12]));
         ca.setPaymentMethod(attributes[13]);
@@ -128,8 +155,15 @@ public class CustomerCSVReader {
         } else {
         	p.setName("sam");
         }
-        ca.getDevicesOwned().add(p);
+        ca.getExistingProducts().add(p);
         ca.setChurnClass(attributes[19]);
+        if (ca.getChurnClass().equals("T")) {
+        	ca.setChurn(0.7 + 0.3 * rand.nextDouble());
+        } else {
+           ca.setChurn(0.1 + 0.6 * rand.nextDouble());
+        }
+        ca.setChurnStatus("Assessed");
+        ca.setBalance(150 * rand.nextDouble());
     	return ca;
     }
 }

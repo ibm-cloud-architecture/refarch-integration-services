@@ -65,7 +65,7 @@ public class TestDeployedRestCustomerService {
 		ProductDTO pdto = new ProductDTO();
 		pdto.setName("sam");
 		pdto.setPhoneNumber("6507004500");
-		c.getDevicesOwned().add(pdto);
+		c.getExistingProducts().add(pdto);
 		String rep=client.executeCustomerPost("/customers", c);
 		Rep repO = client.getParser().fromJson(rep, Rep.class);
 		Assert.assertTrue(rep.contains("{\"id"));
@@ -76,7 +76,7 @@ public class TestDeployedRestCustomerService {
 		rep=client.executeGetMethodAsJson("/customers/email/bp@supersite.com",null);
 		CustomerAccount ca = client.getParser().fromJson(rep, CustomerAccount.class);
 		Assert.assertTrue("LeBoulanger".equals(ca.getLastName()));
-		ProductDTO p = ca.getDevicesOwned().get(0);
+		ProductDTO p = ca.getExistingProducts().get(0);
 		System.out.println(p.getPhoneNumber()+" "+p.getName());
 		System.out.println(ca.getAccountNumber()+" "+ca.getBalance());
 		

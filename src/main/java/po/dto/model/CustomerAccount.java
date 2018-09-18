@@ -52,7 +52,7 @@ public class CustomerAccount {
 	protected String paymentMethod;
 	protected String localBillType;
 	protected String ratePlan;
-	protected List<ProductDTO> devicesOwned;
+	protected List<ProductDTO> existingProducts;
 	
 	
 	public CustomerAccount(Customer c){
@@ -93,10 +93,10 @@ public class CustomerAccount {
 			this.ratePlan=c.getAccount().getRatePlan();
 		}
 		if (c.getOwnedProducts() != null) {
-			this.devicesOwned=new ArrayList<ProductDTO>();
+			this.existingProducts=new ArrayList<ProductDTO>();
 			for (ProductAssociation pa : c.getOwnedProducts()) {
 				ProductDTO pDTO = ProductDTO.toProductDTO(pa.getProduct(), pa.getPhoneNumber());
-				this.getDevicesOwned().add(pDTO);
+				this.getExistingProducts().add(pDTO);
 			}
 		}
 	}
@@ -114,7 +114,7 @@ public class CustomerAccount {
 		c.setStatus(this.getStatus());
 		c.setChildren(this.getChildren());
 		c.setEstimatedIncome(this.getEstimatedIncome());
-		if (this.isCarOwner()) {
+		if (this.getCarOwner()) {
 			c.setCarOwner("T");
 		} else {
 			c.setCarOwner("F");
@@ -223,13 +223,10 @@ public class CustomerAccount {
 		this.estimatedIncome = estimatedIncome;
 	}
 
-	public boolean isCarOwner() {
-		return carOwner;
-	}
-
 	public boolean getCarOwner() {
 		return carOwner;
 	}
+
 
 	
 	public void setCarOwner(boolean carOwner) {
@@ -382,13 +379,13 @@ public class CustomerAccount {
 	}
 
 
-	public List<ProductDTO> getDevicesOwned() {
-		if (devicesOwned == null) devicesOwned = new ArrayList<ProductDTO>();
-		return devicesOwned;
+	public List<ProductDTO> getExistingProducts() {
+		if (existingProducts == null) existingProducts = new ArrayList<ProductDTO>();
+		return existingProducts;
 	}
 
-	public void setDevicesOwned(List<ProductDTO> devicesOwned) {
-		this.devicesOwned = devicesOwned;
+	public void setExistingProducts(List<ProductDTO> devicesOwned) {
+		this.existingProducts = devicesOwned;
 	}
 
 	public String getChurnClass() {
@@ -413,6 +410,24 @@ public class CustomerAccount {
 
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
+	}
+
+	public String toCsvString() {
+		return getId() + ","
+				+ getEmailAddress() + ","
+				+ getFirstName() + "," + getLastName() + ","
+				+ getAge() + "," + getGender() + ","
+				+ getType() + "," + getStatus() + ","
+				+ getChildren() + "," + getEstimatedIncome() + ","
+				+ getCarOwner() + "," + getChurn() + ","
+				+ getChurnClass() + "," + getChurnStatus() + ","
+				+ getZipCode() + "," + getMaritalStatus() + "," 
+				+ getLongDistance() + "," + getLongDistanceBillType() + ","
+				+ getInternational() + "," + getLocal() + ","
+				+ getLocalBillType() + ","
+				+ getDropped() + ","
+				+ getPaymentMethod() + "," + getRatePlan() +","
+				+ getBalance() + "," + getUsage();
 	}
 
 

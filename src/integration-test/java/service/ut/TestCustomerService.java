@@ -63,7 +63,7 @@ public class TestCustomerService extends BaseTest{
 				ProductDTO ipho=pres.getProductByName("ipho");
 				CustomerResource serv = new CustomerResource();
 				
-				c.getDevicesOwned().add(ipho);
+				c.getExistingProducts().add(ipho);
 				serv.newCustomer(c);
 				Response rep  = serv.getCustomerByEmail(c.getEmailAddress());
 				Assert.assertNotNull(rep);
