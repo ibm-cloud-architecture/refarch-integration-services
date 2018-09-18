@@ -37,7 +37,7 @@ public class AddNeededCustomersToBackend {
 			c.setLastName("TheBuilder");
 			c.setName("Eddie TheBuilder");
 			c.setAge(40);
-			c.setCarOwner("T");
+			c.setCarOwner(true);
 			c.setChildren(2);
 			c.setMaritalStatus("Familly");
 			c.setEmailAddress("eddie@email.com");
@@ -78,7 +78,7 @@ public class AddNeededCustomersToBackend {
 			c.setLastName("TheBuilder");
 			c.setName("Bob TheBuilder");
 			c.setAge(24);
-			c.setCarOwner("F");
+			c.setCarOwner(false);
 			c.setChildren(0);
 			c.setMaritalStatus("Single");
 			c.setEmailAddress("bobbuilder@email.com");

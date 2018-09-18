@@ -92,7 +92,11 @@ public class CustomerCSVReader {
     	ca.setStatus(attributes[2]);
     	ca.setChildren(Integer.parseInt(attributes[3]));
     	ca.setEstimatedIncome(Double.parseDouble(attributes[4]));
-    	ca.setCarOwner(attributes[5]);
+    	if (attributes[5] == "T") {
+    		ca.setCarOwner(true);
+		} else {
+			ca.setCarOwner(false);
+		}
     	ca.setAge(Double.parseDouble(attributes[6]));
     	
     	if (attributes[7] == null || attributes[7].isEmpty()){
@@ -105,7 +109,7 @@ public class CustomerCSVReader {
     		int  n = rand.nextInt(zipcodes.length) ;
     		attributes[8]=zipcodes[n];
     	}
-    	ca.setZipcode(attributes[8]);
+    	ca.setZipCode(attributes[8]);
     	ca.setAccountNumber("ACCT_"+ca.getId());
     	ca.setLongDistance(Double.parseDouble(attributes[9]));
     	ca.setInternational(Double.parseDouble(attributes[10]));

@@ -31,7 +31,7 @@ public class CustomerAccount {
 	protected String status;
 	protected int children;
 	protected double estimatedIncome;
-	protected String carOwner;
+	protected boolean carOwner;
 	protected String profession;
 	protected String churnClass;
 	protected String churnStatus;
@@ -68,7 +68,12 @@ public class CustomerAccount {
 		this.children=c.getChildren();
 		this.estimatedIncome=c.getEstimatedIncome();
 		this.profession=c.getProfession();
-		this.carOwner=c.getCarOwner();
+		
+		if (c.getCarOwner() == "T") {
+			this.carOwner=true;
+		} else {
+			this.carOwner=false;
+		}
 		this.churnStatus=c.getChurnStatus();
 		this.churn=c.getChurnRisk();
 		this.maritalStatus=c.getMaritalStatus();
@@ -109,11 +114,16 @@ public class CustomerAccount {
 		c.setStatus(this.getStatus());
 		c.setChildren(this.getChildren());
 		c.setEstimatedIncome(this.getEstimatedIncome());
-		c.setCarOwner(this.isCarOwner());
+		if (this.isCarOwner()) {
+			c.setCarOwner("T");
+		} else {
+			c.setCarOwner("F");
+		}
+		
 		c.setProfession(this.getProfession());
 		c.setChurnStatus(this.getChurnStatus());
-		c.setChurn(this.getChurnRisk());
-		c.setZipCode(this.getZipcode());
+		c.setChurn(this.getChurn());
+		c.setZipCode(this.getZipCode());
 		c.setMaritalStatus(this.getMaritalStatus());
 		c.setMostDominantTone(this.getMostDominantTone());
 		Account a = new Account();
@@ -213,16 +223,16 @@ public class CustomerAccount {
 		this.estimatedIncome = estimatedIncome;
 	}
 
-	public String isCarOwner() {
+	public boolean isCarOwner() {
 		return carOwner;
 	}
 
-	public String getCarOwner() {
+	public boolean getCarOwner() {
 		return carOwner;
 	}
 
 	
-	public void setCarOwner(String carOwner) {
+	public void setCarOwner(boolean carOwner) {
 		this.carOwner = carOwner;
 	}
 
@@ -354,14 +364,6 @@ public class CustomerAccount {
 		this.churnStatus = churn;
 	}
 
-	public String getZipcode() {
-		return zipCode;
-	}
-
-	public void setZipcode(String zipcode) {
-		this.zipCode = zipcode;
-	}
-
 
 	public String getMaritalStatus() {
 		return maritalStatus;
@@ -379,13 +381,6 @@ public class CustomerAccount {
 		this.mostDominantTone = mostDominantTone;
 	}
 
-	public double getChurnRisk() {
-		return churn;
-	}
-
-	public void setChurnRisk(double churnRisk) {
-		this.churn = churnRisk;
-	}
 
 	public List<ProductDTO> getDevicesOwned() {
 		if (devicesOwned == null) devicesOwned = new ArrayList<ProductDTO>();

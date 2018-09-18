@@ -23,7 +23,7 @@ public class ModelFactory {
 		c.setLastName("LeBoulanger");
 		c.setName("Paul LeBoulanger");
 		c.setAge(40);
-		c.setCarOwner("F");
+		c.setCarOwner(false);
 		c.setChildren(2);
 		c.setEmailAddress("bp@supersite.com");
 		c.setEstimatedIncome(90000);
