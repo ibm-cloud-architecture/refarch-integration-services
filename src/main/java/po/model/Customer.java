@@ -37,11 +37,13 @@ public class Customer extends Party{
 	protected double estimatedIncome = 10000;
 	@Column(nullable=true, length=8)
 	protected String zipCode;
-	@Column(nullable=true, length=10)
+	@Column(nullable=true, length=10, name="CAROWNER")
 	protected String carOwner;
 	@Column(nullable=true, length=50)
 	protected String profession;
+	@Column(nullable=true, length=20, name="CHURNSTATUS")
 	protected String churnStatus="NotEvaluated";
+	@Column(nullable=true, length=3, name="CHURNCLASS")
 	protected String churnClass="F";
 	@Column(nullable=true,name="churnrisk")
 	protected double churn;

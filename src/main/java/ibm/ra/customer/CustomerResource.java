@@ -77,7 +77,7 @@ public class CustomerResource {
 	@ApiOperation(value = "Get customer and his/her account with ID")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Customer retrieved", response = CustomerAccount.class),
-		@ApiResponse(code = 404, message = "Customer not found") })
+	@ApiResponse(code = 404, message = "Customer not found") })
 	public Response getCustomerById(@PathParam("id")String id) throws DALException{
 		logger.warning((new Date()).toString()+" Get Customer "+id);
 		Customer c = customerService.getCustomerById(Long.parseLong(id));

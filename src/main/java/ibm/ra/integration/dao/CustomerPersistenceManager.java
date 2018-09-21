@@ -23,6 +23,10 @@ public class CustomerPersistenceManager {
 	}
 	 
 	
+	public void setEntityManagerFactory(EntityManagerFactory entityFactory) {
+		this.emf = entityFactory;
+	}
+	
 	public EntityManagerFactory getEntityManagerFactory() {    
 	    if (emf == null)
 	      synchronized (singleton) {
