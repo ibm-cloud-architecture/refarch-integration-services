@@ -11,6 +11,7 @@ image:
 
 service:
   type: ClusterIP
+  name: http
   externalPort: 9080
   internalPort: 9080
   externalSPort: 9443
