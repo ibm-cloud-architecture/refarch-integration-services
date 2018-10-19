@@ -74,7 +74,7 @@ public class CustomerRestClient extends RestClient {
 	}
 	
 	
-	 @Override
+	@Override
     public String executeGetMethod(String url,List<NameValuePair> nvps) throws Exception {
     	HttpGet request = new HttpGet(buildCompleteUrl(url,nvps));
     	request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
